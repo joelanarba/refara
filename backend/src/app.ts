@@ -1,41 +1,43 @@
-import express from 'express';
+import express, { Request, Response, NextFunction } from 'express';
 import cors from 'cors';
 import helmet from 'helmet';
-import morgan from 'morgan';
-import { config } from './config';
-import routes from './routes';
-import { errorHandler } from './middleware/errorHandler';
-import { notFoundHandler } from './middleware/notFound';
+import rateLimit from 'express-rate-limit';
+import { errorHandler, NotFoundError } from './middleware/errorHandler';
+
+// Route imports
+import authRoutes from './routes/authRoutes';
+import referralRoutes from './routes/referralRoutes';
 
 const app = express();
 
-// Security headers
+// Security and Parser Middlewares
 app.use(helmet());
+app.use(cors());
+app.use(express.json({ limit: '10kb' }));
 
-// CORS
-app.use(
-  cors({
-    origin: config.corsOrigin,
-    credentials: true,
-  }),
-);
+// Global Rate Limiting
+const apiLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  message: { error: { message: 'Too many requests, please try again later.', status: 429 } },
+});
+app.use('/api', apiLimiter);
 
-// Request logging
-if (config.nodeEnv !== 'test') {
-  app.use(morgan('dev'));
-}
+// Health Check Route
+app.get('/api/v1/health', (_req: Request, res: Response) => {
+  res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
+});
 
-// Body parsing
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+// Primary API Endpoints
+app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/referrals', referralRoutes);
 
-// API routes
-app.use('/api/v1', routes);
+// Catch Unmatched 404 Routes
+app.use((_req: Request, _res: Response, next: NextFunction) => {
+  next(new NotFoundError('The requested endpoint does not exist on this server.'));
+});
 
-// 404 handler
-app.use(notFoundHandler);
-
-// Error handler
+// Global Error Handler Middleware (MUST be registered after all routes)
 app.use(errorHandler);
 
 export default app;

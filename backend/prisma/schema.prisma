@@ -1,16 +1,10 @@
-generator client {
-  provider = "prisma-client-js"
-}
-
 datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
-enum UserRole {
-  REFERRING_WORKER
-  RECEIVING_WORKER
-  ADMIN
+generator client {
+  provider = "prisma-client-js"
 }
 
 enum FacilityType {
@@ -28,80 +22,96 @@ enum ReferralUrgency {
   EMERGENCY
 }
 
+enum Role {
+  REFERRING_WORKER
+  RECEIVING_WORKER
+  ADMIN
+}
+
+
 enum ReferralStatus {
   SUBMITTED
   ACKNOWLEDGED
   ACCEPTED
   REJECTED
   CANCELLED
-  ARRIVED
+  PATIENT_ARRIVED
   COMPLETED
 }
 
-model User {
-  id           String    @id @default(uuid())
-  name         String
-  email        String    @unique
-  passwordHash String
-  role         UserRole
-  facilityId   String?
-  facility     Facility? @relation(fields: [facilityId], references: [id])
-  createdAt    DateTime  @default(now())
-  updatedAt    DateTime  @updatedAt
-
-  statusChanges ReferralStatusHistory[]
-
-  @@map("users")
-}
-
 model Facility {
-  id        String       @id @default(uuid())
-  name      String
-  type      FacilityType
-  location  String
-  createdAt DateTime     @default(now())
-  updatedAt DateTime     @updatedAt
+  id                 String     @id @default(uuid())
+  name               String     @unique
+  facilityType       FacilityType
+  location           String
+  createdAt          DateTime   @default(now())
+  updatedAt          DateTime   @updatedAt
 
   users              User[]
-  referringReferrals Referral[] @relation("ReferringFacility")
-  receivingReferrals Referral[] @relation("ReceivingFacility")
+  outgoingReferrals  Referral[] @relation("OutgoingFacility")
+  incomingReferrals  Referral[] @relation("IncomingFacility")
 
   @@map("facilities")
 }
 
+model User {
+  id            String                  @id @default(uuid())
+  name          String
+  email         String                  @unique
+  passwordHash  String
+  role          Role
+  facilityId    String
+  facility      Facility                @relation(fields: [facilityId], references: [id])
+  createdAt     DateTime                @default(now())
+  updatedAt     DateTime                @updatedAt
+
+  createdReferrals Referral[]           @relation("ReferralCreator")
+  statusAudits     ReferralStatusHistory[]
+
+  @@map("users")
+}
+
 model Referral {
-  id                  String          @id @default(uuid())
+  id                  String                  @id @default(uuid())
+  referralCode        String                  @unique
   patientName         String
   patientAge          Int
-  gestationalWeeks    Int?
-  reason              String
+  gestationalAgeWeeks Int
   urgency             ReferralUrgency
-  status              ReferralStatus  @default(SUBMITTED)
+  reasonForReferral   String
+  currentStatus       ReferralStatus          @default(SUBMITTED)
+
   referringFacilityId String
+  referringFacility   Facility                @relation("OutgoingFacility", fields: [referringFacilityId], references: [id])
+
   receivingFacilityId String
+  receivingFacility   Facility                @relation("IncomingFacility", fields: [receivingFacilityId], references: [id])
+
   createdByUserId     String
-  createdAt           DateTime        @default(now())
-  updatedAt           DateTime        @updatedAt
+  createdByUser       User                    @relation("ReferralCreator", fields: [createdByUserId], references: [id])
 
-  referringFacility Facility @relation("ReferringFacility", fields: [referringFacilityId], references: [id])
-  receivingFacility Facility @relation("ReceivingFacility", fields: [receivingFacilityId], references: [id])
+  createdAt           DateTime                @default(now())
+  updatedAt           DateTime                @updatedAt
 
-  statusHistory ReferralStatusHistory[]
+  statusHistory       ReferralStatusHistory[]
 
+  @@index([referringFacilityId])
+  @@index([receivingFacilityId])
+  @@index([currentStatus])
   @@map("referrals")
 }
 
 model ReferralStatusHistory {
   id             String         @id @default(uuid())
   referralId     String
-  previousStatus ReferralStatus?
+  referral       Referral       @relation(fields: [referralId], references: [id], onDelete: Cascade)
+  previousStatus ReferralStatus
   newStatus      ReferralStatus
   changedByUserId String
-  reasonText     String?
+  changedByUser  User           @relation(fields: [changedByUserId], references: [id])
+  notes          String?
   timestamp      DateTime       @default(now())
 
-  referral  Referral @relation(fields: [referralId], references: [id])
-  changedBy User     @relation(fields: [changedByUserId], references: [id])
-
+  @@index([referralId])
   @@map("referral_status_history")
 }
