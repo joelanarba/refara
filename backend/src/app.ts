@@ -5,8 +5,8 @@ import rateLimit from 'express-rate-limit';
 import { errorHandler, NotFoundError } from './middleware/errorHandler';
 
 // Route imports
-import authRoutes from './routes/authRoutes';
-import referralRoutes from './routes/referralRoutes';
+import { authRoutes } from './modules/auth';
+import { referralRoutes } from './modules/referrals';
 
 const app = express();
 

@@ -1,2 +1,1 @@
-// Auth module - handles authentication (login, JWT)
-// To be implemented
+export { default as authRoutes } from './auth.routes';

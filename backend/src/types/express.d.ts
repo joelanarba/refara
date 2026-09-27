@@ -1,9 +1,9 @@
-import { Role } from '@prisma/client';
+import { UserRole } from '@prisma/client';
 
 export interface AuthUser {
   userId: string;
-  role: Role;
-  facilityId: string;
+  role: UserRole;
+  facilityId?: string | null;
 }
 
 declare global {
