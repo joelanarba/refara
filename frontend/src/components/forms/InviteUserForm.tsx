@@ -7,10 +7,7 @@ interface InviteUserFormProps {
   onSuccess?: () => void;
 }
 
-export default function InviteUserForm({
-  onCancel,
-  onSuccess,
-}: InviteUserFormProps) {
+export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormProps) {
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [role, setRole] = useState<UserRole | ''>('');
@@ -92,10 +89,7 @@ export default function InviteUserForm({
 
         <label>
           Role
-          <select
-            value={role}
-            onChange={(event) => setRole(event.target.value as UserRole)}
-          >
+          <select value={role} onChange={(event) => setRole(event.target.value as UserRole)}>
             <option value="">Select a role</option>
             {Object.values(ROLES).map((value) => (
               <option key={value} value={value}>
@@ -107,10 +101,7 @@ export default function InviteUserForm({
 
         <label>
           Facility
-          <select
-            value={facilityId}
-            onChange={(event) => setFacilityId(event.target.value)}
-          >
+          <select value={facilityId} onChange={(event) => setFacilityId(event.target.value)}>
             <option value="">Select a facility</option>
             <option value="pending">Facility selection coming soon</option>
           </select>
