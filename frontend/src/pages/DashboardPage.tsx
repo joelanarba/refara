@@ -1,4 +1,4 @@
-import { useAuth } from '@/features/auth/Useauth';
+import { useAuth } from '@/features/auth/useAuth';
 import AdminDashboard from '@/features/dashboard/views/AdminDashboard';
 import FacilityDashboard from '@/features/dashboard/views/FacilityDashboard';
 

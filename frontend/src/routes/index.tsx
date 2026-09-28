@@ -4,7 +4,7 @@ import { ROUTES } from '../constants/routes';
 import LoginPage from '../pages/LoginPage';
 import DashboardPage from '../pages/DashboardPage';
 import ProtectedRoute from './ProtectedRoute';
-import AppLayout from '@/components/layout/Applayout';
+import AppLayout from '@/components/layout/AppLayout';
 import NotFoundPage from '@/pages/NotFoundPage';
 
 // Not built yet — uncomment each as the page is created
