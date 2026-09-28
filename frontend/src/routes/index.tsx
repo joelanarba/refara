@@ -3,7 +3,7 @@ import { ROUTES } from '../constants/routes';
 
 import LoginPage from '../pages/LoginPage';
 import ProtectedRoute from './ProtectedRoute';
-import AppLayout from '@/components/layout/Applayout';
+import AppLayout from '@/components/layout/AppLayout';
 // import DashboardPage from '../pages/DashboardPage';
 // import ReferralsListPage from '../pages/ReferralsListPage';
 // import ReferralDetailPage from '../pages/ReferralDetailPage';

@@ -1,4 +1,4 @@
-import { useAuth } from '@/features/auth/Useauth';
+import { useAuth } from '@/features/auth/useAuth';
 import { useLocation } from 'react-router-dom';
 
 const CRUMB_LABELS: Record<string, string> = {

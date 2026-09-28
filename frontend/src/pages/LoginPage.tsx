@@ -1,4 +1,4 @@
-import { useAuth } from '@/features/auth/Useauth';
+import { useAuth } from '@/features/auth/useAuth';
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -25,7 +25,7 @@ export default function LoginPage() {
     try {
       await login(email, password);
       navigate('/dashboard');
-    } catch (err) {
+    } catch (_err) {
       setError('Invalid email or password.');
     } finally {
       setLoading(false);
@@ -38,7 +38,7 @@ export default function LoginPage() {
     try {
       await login(demoEmail, 'demo');
       navigate('/dashboard');
-    } catch (err) {
+    } catch (_err) {
       setError('Demo login failed.');
     } finally {
       setLoading(false);

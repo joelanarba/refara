@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ROLE_LABELS } from '../../constants/roles';
 import { ROUTES } from '../../constants/routes';
-import { useAuth } from '@/features/auth/Useauth';
+import { useAuth } from '@/features/auth/useAuth';
 
 interface NavItem {
   to: string;
