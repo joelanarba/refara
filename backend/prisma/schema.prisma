@@ -60,8 +60,11 @@ model User {
   email         String                  @unique
   passwordHash  String
   role          Role
-  facilityId    String
-  facility      Facility                @relation(fields: [facilityId], references: [id])
+  
+  // Make facilityId and relation optional
+  facilityId    String?
+  facility      Facility?               @relation(fields: [facilityId], references: [id])
+  
   createdAt     DateTime                @default(now())
   updatedAt     DateTime                @updatedAt
 

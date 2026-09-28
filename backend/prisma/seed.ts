@@ -10,7 +10,7 @@ async function main() {
   await prisma.facility.deleteMany();
 
   const chps = await prisma.facility.create({
-    data: { name: 'Amasaman CHPS Compound', facilityType: FacilityType.CHPS, location: 'Ga West, Greater Accra' },
+    data: { name: 'Amasaman CHPS Compound', facilityType: FacilityType.CHPS_COMPOUND, location: 'Ga West, Greater Accra' },
   });
 
   const hospital = await prisma.facility.create({

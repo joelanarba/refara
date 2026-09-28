@@ -4,12 +4,18 @@ import {Role, ReferralUrgency, ReferralStatus} from '@prisma/client';
 export const registerSchema = z.object({
   name: z.string().trim().min(2).max(100),
   email: z.string().trim().email().toLowerCase(),
-  password: z.string().min(8).max(100)
-    .regex(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]/, {
-      message: "Password must contain uppercase, lowercase, number, and special character",
-    }),
+  password: z.string().min(8).max(100),
   role: z.nativeEnum(Role),
-  facilityId: z.string().uuid(),
+  facilityId: z.string().uuid().optional().nullable(),
+}).refine((data) => {
+  // Enforce facilityId for non-admin users
+  if (data.role !== Role.ADMIN && !data.facilityId) {
+    return false;
+  }
+  return true;
+}, {
+  message: "facilityId is required for REFERRING_WORKER and RECEIVING_WORKER roles",
+  path: ["facilityId"],
 });
 
 export const loginSchema = z.object({

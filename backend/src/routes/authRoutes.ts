@@ -7,7 +7,87 @@ import { Role } from '@prisma/client';
 
 const router = Router();
 
-router.post('/register', authenticateJWT, authorizeRoles(Role.ADMIN), validateBody(registerSchema), registerUser);
+/**
+ * @openapi
+ * /auth/register:
+ *   post:
+ *     summary: Register a new user (Admin only)
+ *     tags:
+ *       - Auth
+ *     security:
+ *       - bearerAuth: []
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - name:
+ *               - email
+ *               - password
+ *               - role
+ *             properties:
+ *               name:
+ *                 type: string
+ *                 example: Dr. Jane Doe
+ *               email:
+ *                 type: string
+ *                 example: jane.doe@hospital.org
+ *               password:
+ *                 type: string
+ *                 example: StrongP@ssw0rd!
+ *               role:
+ *                 $ref: '#/components/schemas/Role'
+ *               facilityId:
+ *                 type: string
+ *                 nullable: true
+ *                 example: 9b1deb4d-3b7d-4bad-9bdd-2b0d7b3dcb6d
+ *     responses:
+ *       201:
+ *         description: User registered successfully
+ *       400:
+ *         description: Validation Error
+ *       409:
+ *         description: Email already registered
+ */
+router.post(
+  '/register',
+  authenticateJWT,
+  authorizeRoles(Role.ADMIN),
+  validateBody(registerSchema),
+  registerUser
+);
+
+/**
+ * @openapi
+ * /auth/login:
+ *   post:
+ *     summary: Authenticate user & issue JWT
+ *     tags:
+ *       - Auth
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             required:
+ *               - email
+ *               - password
+ *             properties:
+ *               email:
+ *                 type: string
+ *                 example: jane.doe@hospital.org
+ *               password:
+ *                 type: string
+ *                 example: StrongP@ssw0rd!
+ *     responses:
+ *       200:
+ *         description: Authentication successful
+ *       401:
+ *         description: Invalid credentials
+ */
 router.post('/login', validateBody(loginSchema), loginUser);
 
 export default router;
