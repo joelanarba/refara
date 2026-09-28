@@ -1,92 +1,69 @@
-import StatsCard from './StatsCard';
-import { DashboardStats } from '../types';
+import { DashboardReferral } from '../types';
 
-interface StatsRowProps {
-  stats: DashboardStats | null;
+interface RecentReferralsPanelProps {
+  title: string;
+  referrals: DashboardReferral[];
   loading: boolean;
-  totalLabel: string; // "Total referrals" (admin) | "My referrals" (facility)
 }
 
-export default function StatsRow({ stats, loading, totalLabel }: StatsRowProps) {
-  const v = (n?: number) => (loading ? '–' : (n ?? 0));
+export default function RecentReferralsPanel({ title, referrals, loading }: RecentReferralsPanelProps) {
+  if (loading) {
+    return (
+      <div className="panel" style={{ padding: '2rem', textAlign: 'center' }}>
+        <p>Loading recent referrals...</p>
+      </div>
+    );
+  }
 
   return (
-    <div className="metric-grid">
-      <StatsCard
-        icon={<ClipboardIcon />}
-        iconVariant="blue"
-        label={totalLabel}
-        value={v(stats?.totalReferrals)}
-        trend={
-          stats?.totalReferralsChangePct != null
-            ? { text: `↗ ${stats.totalReferralsChangePct}%`, direction: 'up' }
-            : undefined
-        }
-      />
-      <StatsCard
-        icon={<ClockIcon />}
-        iconVariant="amber"
-        label="Pending action"
-        value={v(stats?.pendingAction)}
-        trend={{ text: 'Needs attention', direction: 'warn' }}
-      />
-      <StatsCard
-        icon={<CheckIcon />}
-        iconVariant="green"
-        label="Completed"
-        value={v(stats?.completed)}
-        trend={
-          stats?.completedChangePct != null
-            ? { text: `↗ ${stats.completedChangePct}%`, direction: 'up' }
-            : undefined
-        }
-      />
-      <StatsCard
-        icon={<PulseIcon />}
-        iconVariant="coral"
-        label="Urgent cases"
-        value={v(stats?.urgentCases)}
-        trend={{ text: 'Active priority', direction: 'muted' }}
-      />
+    <div className="panel recent-referrals-panel">
+      <div className="panel-header" style={{ marginBottom: '1rem' }}>
+        <h3 className="panel-title" style={{ fontSize: '1.2rem', fontWeight: 600 }}>{title}</h3>
+      </div>
+      
+      {referrals.length === 0 ? (
+        <div className="empty-state" style={{ padding: '2rem', textAlign: 'center', color: '#666' }}>
+          <p>No recent referrals found.</p>
+        </div>
+      ) : (
+        <div className="table-responsive" style={{ overflowX: 'auto' }}>
+          <table className="referral-table" style={{ width: '100%', borderCollapse: 'collapse', textAlign: 'left' }}>
+            <thead>
+              <tr style={{ borderBottom: '1px solid #eee' }}>
+                <th style={{ padding: '0.75rem 0.5rem' }}>ID</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Patient</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>From</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>To</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Urgency</th>
+                <th style={{ padding: '0.75rem 0.5rem' }}>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {referrals.map((r) => (
+                <tr key={r.id} style={{ borderBottom: '1px solid #f5f5f5' }}>
+                  <td style={{ padding: '0.75rem 0.5rem' }}>{r.code || r.id.substring(0, 8)}</td>
+                  <td style={{ padding: '0.75rem 0.5rem' }}>
+                    <div style={{ fontWeight: 500 }}>{r.patientName}</div>
+                    <div style={{ fontSize: '0.85em', color: '#666' }}>Age: {r.patientAge}</div>
+                  </td>
+                  <td style={{ padding: '0.75rem 0.5rem' }}>{r.referringFacilityName}</td>
+                  <td style={{ padding: '0.75rem 0.5rem' }}>{r.receivingFacilityName}</td>
+                  <td style={{ padding: '0.75rem 0.5rem' }}>
+                    <span className={`badge urgency-${r.urgency.toLowerCase()}`}>
+                      {r.urgency}
+                    </span>
+                  </td>
+                  <td style={{ padding: '0.75rem 0.5rem' }}>
+                    <span className={`badge status-${r.status.toLowerCase()}`}>
+                      {r.status}
+                    </span>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </div>
-  );
-}
-
-const svgProps = {
-  width: 16,
-  height: 16,
-  viewBox: '0 0 24 24',
-  fill: 'none',
-  stroke: 'currentColor',
-  strokeWidth: 2,
-};
-function ClipboardIcon() {
-  return (
-    <svg {...svgProps}>
-      <rect x="6" y="4" width="12" height="17" rx="2" />
-      <path d="M9 4V3a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v1M9 11h6M9 15h6" />
-    </svg>
-  );
-}
-function ClockIcon() {
-  return (
-    <svg {...svgProps}>
-      <circle cx="12" cy="12" r="9" />
-      <path d="M12 7v5l3 3" />
-    </svg>
-  );
-}
-function CheckIcon() {
-  return (
-    <svg {...svgProps}>
-      <path d="M5 13l4 4L19 7" />
-    </svg>
-  );
-}
-function PulseIcon() {
-  return (
-    <svg {...svgProps}>
-      <path d="M3 12h4l2 8 4-16 2 8h6" />
-    </svg>
   );
 }
