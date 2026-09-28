@@ -2,15 +2,17 @@ import { Routes, Route } from 'react-router-dom';
 import { ROUTES } from '../constants/routes';
 
 import LoginPage from '../pages/LoginPage';
+import DashboardPage from '../pages/DashboardPage';
 import ProtectedRoute from './ProtectedRoute';
-import AppLayout from '@/components/layout/AppLayout';
-// import DashboardPage from '../pages/DashboardPage';
+import AppLayout from '@/components/layout/Applayout';
+import NotFoundPage from '@/pages/NotFoundPage';
+
+// Not built yet — uncomment each as the page is created
 // import ReferralsListPage from '../pages/ReferralsListPage';
 // import ReferralDetailPage from '../pages/ReferralDetailPage';
 // import ReferralCreatePage from '../pages/ReferralCreatePage';
 // import FacilitiesPage from '../pages/FacilitiesPage';
 // import UsersPage from '../pages/UsersPage';
-// import NotFoundPage from '../pages/NotFoundPage';
 
 export default function AppRoutes() {
   return (
@@ -21,8 +23,8 @@ export default function AppRoutes() {
       {/* Protected — any authenticated role */}
       <Route element={<ProtectedRoute />}>
         <Route element={<AppLayout />}>
-          {/* <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
-          <Route path={ROUTES.REFERRALS} element={<ReferralsListPage />} />
+          <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
+          {/* <Route path={ROUTES.REFERRALS} element={<ReferralsListPage />} />
           <Route path={ROUTES.REFERRAL_DETAIL} element={<ReferralDetailPage />} /> */}
 
           {/* Protected — referring workers only */}
@@ -40,7 +42,7 @@ export default function AppRoutes() {
 
       {/* Default + fallback */}
       <Route path={ROUTES.HOME} element={<LoginPage />} />
-      {/* <Route path="*" element={<NotFoundPage />} /> */}
+      <Route path="*" element={<NotFoundPage />} />
     </Routes>
   );
 }
