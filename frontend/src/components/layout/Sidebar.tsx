@@ -2,7 +2,7 @@ import { ReactNode } from 'react';
 import { NavLink } from 'react-router-dom';
 import { ROLE_LABELS } from '../../constants/roles';
 import { ROUTES } from '../../constants/routes';
-import { useAuth } from '@/features/auth/useAuth';
+import { useAuth } from '@/features/auth/Useauth';
 
 interface NavItem {
   to: string;
@@ -32,6 +32,12 @@ export default function Sidebar({ open, pendingReferralsCount }: SidebarProps) {
   const NAV_ITEMS: NavItem[] = [
     { to: ROUTES.DASHBOARD, label: 'Overview', icon: <GridIcon /> },
     { to: ROUTES.REFERRALS, label: 'Referrals', icon: <ListIcon />, badge: pendingReferralsCount },
+    {
+      to: ROUTES.REFERRAL_CREATE,
+      label: 'New referral',
+      icon: <PlusIcon />,
+      roles: ['REFERRING_WORKER'],
+    },
     { to: ROUTES.FACILITIES, label: 'Facilities', icon: <BuildingIcon />, roles: ['ADMIN'] },
     { to: ROUTES.USERS, label: 'Users & access', icon: <UsersIcon />, roles: ['ADMIN'] },
   ];
@@ -131,6 +137,20 @@ function ListIcon() {
       strokeWidth="2"
     >
       <path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" />
+    </svg>
+  );
+}
+function PlusIcon() {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M12 5v14M5 12h14" />
     </svg>
   );
 }
