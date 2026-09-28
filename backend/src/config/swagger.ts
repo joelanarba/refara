@@ -12,7 +12,7 @@ const options: swaggerJSDoc.Options = {
     },
     servers: [
       {
-        url: 'http://localhost:5000/api',
+        url: 'http://localhost:3000/api/v1',
         description: 'Local Development Server',
       },
     ],
@@ -26,13 +26,13 @@ const options: swaggerJSDoc.Options = {
         },
       },
       schemas: {
-        Role: {
+        UserRole: {
           type: 'string',
           enum: ['REFERRING_WORKER', 'RECEIVING_WORKER', 'ADMIN'],
         },
-        Urgency: {
+        ReferralUrgency: {
           type: 'string',
-          enum: ['LOW', 'MEDIUM', 'HIGH', 'CRITICAL'],
+          enum: ['ROUTINE', 'URGENT', 'EMERGENCY'],
         },
         ReferralStatus: {
           type: 'string',
@@ -41,15 +41,15 @@ const options: swaggerJSDoc.Options = {
             'ACKNOWLEDGED',
             'ACCEPTED',
             'REJECTED',
-            'PATIENT_ARRIVED',
-            'COMPLETED',
             'CANCELLED',
+            'ARRIVED',
+            'COMPLETED',
           ],
         },
       },
     },
   },
-  apis: ['./src/routes/*.ts', './src/routes/**/*.ts'], // Scans JSDoc comments inside routes
+  apis: ['./src/modules/**/*.routes.ts'], // Scans JSDoc comments inside route modules
 };
 
 const swaggerSpec = swaggerJSDoc(options);
@@ -60,5 +60,5 @@ export const setupSwagger = (app: Express): void => {
     res.setHeader('Content-Type', 'application/json');
     res.send(swaggerSpec);
   });
-  console.log('📄 Swagger docs available at http://localhost:5000/docs');
+  console.log('✅ Swagger docs available at http://localhost:3000/docs');
 };

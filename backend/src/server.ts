@@ -25,7 +25,6 @@ const start = async () => {
 
     process.on('SIGTERM', () => shutdown('SIGTERM'));
     process.on('SIGINT', () => shutdown('SIGINT'));
-
   } catch (error) {
     console.error('Failed to start server:', error);
     await prisma.$disconnect();

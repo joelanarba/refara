@@ -3,14 +3,14 @@ import {
   createReferral,
   getOutgoingReferrals,
   getIncomingReferrals,
-  getReferralDetails,
   updateReferralStatus,
+  getReferralDetails,
   getAdminMetrics,
-} from '../controllers/referralController';
-import { authenticateJWT, authorizeRoles } from '../middleware/auth';
-import { validateBody } from '../middleware/validate';
-import { createReferralSchema, updateStatusSchema } from '../validations/schemas';
-import { Role } from '@prisma/client';
+} from './referral.controller';
+import { authenticateJWT, authorizeRoles } from '../../middleware/auth';
+import { validateBody } from '../../middleware/validate';
+import { createReferralSchema, updateStatusSchema } from './referral.validation';
+import { UserRole } from '@prisma/client';
 
 const router = Router();
 
@@ -34,9 +34,9 @@ router.use(authenticateJWT);
  *             required:
  *               - patientName
  *               - patientAge
- *               - gestationalAgeWeeks
+ *               - gestationalWeeks
  *               - urgency
- *               - reasonForReferral
+ *               - reason
  *               - receivingFacilityId
  *             properties:
  *               patientName:
@@ -45,12 +45,12 @@ router.use(authenticateJWT);
  *               patientAge:
  *                 type: integer
  *                 example: 28
- *               gestationalAgeWeeks:
+ *               gestationalWeeks:
  *                 type: integer
  *                 example: 34
  *               urgency:
- *                 $ref: '#/components/schemas/Urgency'
- *               reasonForReferral:
+ *                 $ref: '#/components/schemas/ReferralUrgency'
+ *               reason:
  *                 type: string
  *                 example: Severe pre-eclampsia, requires ICU support.
  *               receivingFacilityId:
@@ -62,7 +62,12 @@ router.use(authenticateJWT);
  *       400:
  *         description: Validation error or missing facility context
  */
-router.post('/', validateBody(createReferralSchema), createReferral);
+router.post(
+  '/',
+  authorizeRoles(UserRole.REFERRING_WORKER, UserRole.ADMIN),
+  validateBody(createReferralSchema),
+  createReferral,
+);
 
 /**
  * @openapi
@@ -77,7 +82,11 @@ router.post('/', validateBody(createReferralSchema), createReferral);
  *       200:
  *         description: List of outgoing referrals
  */
-router.get('/outgoing', getOutgoingReferrals);
+router.get(
+  '/outgoing',
+  authorizeRoles(UserRole.REFERRING_WORKER, UserRole.ADMIN),
+  getOutgoingReferrals,
+);
 
 /**
  * @openapi
@@ -92,7 +101,11 @@ router.get('/outgoing', getOutgoingReferrals);
  *       200:
  *         description: List of incoming referrals
  */
-router.get('/incoming', getIncomingReferrals);
+router.get(
+  '/incoming',
+  authorizeRoles(UserRole.RECEIVING_WORKER, UserRole.ADMIN),
+  getIncomingReferrals,
+);
 
 /**
  * @openapi
@@ -107,7 +120,7 @@ router.get('/incoming', getIncomingReferrals);
  *       200:
  *         description: Metric counters grouped by referral status
  */
-router.get('/metrics', authorizeRoles(Role.ADMIN), getAdminMetrics);
+router.get('/metrics', authorizeRoles(UserRole.ADMIN), getAdminMetrics);
 
 /**
  * @openapi
@@ -138,7 +151,7 @@ router.get('/:id', getReferralDetails);
  * @openapi
  * /referrals/{id}/status:
  *   patch:
- *     summary: Transition referral status (State Machine logic enforced)
+ *     summary: Update referral status
  *     tags:
  *       - Referrals
  *     security:
@@ -160,14 +173,16 @@ router.get('/:id', getReferralDetails);
  *             properties:
  *               newStatus:
  *                 $ref: '#/components/schemas/ReferralStatus'
- *               notes:
+ *               reasonText:
  *                 type: string
- *                 example: Patient accepted and ambulance dispatched.
+ *                 example: Cancelled due to XYZ
  *     responses:
  *       200:
  *         description: Status updated successfully
  *       400:
- *         description: Invalid status transition sequence
+ *         description: Invalid state transition
+ *       403:
+ *         description: Unauthorized to change state
  */
 router.patch('/:id/status', validateBody(updateStatusSchema), updateReferralStatus);
 

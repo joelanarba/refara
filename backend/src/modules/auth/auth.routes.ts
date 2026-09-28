@@ -1,9 +1,9 @@
 import { Router } from 'express';
-import { registerUser, loginUser } from '../controllers/authController';
-import { validateBody } from '../middleware/validate';
-import { registerSchema, loginSchema } from '../validations/schemas';
-import { authenticateJWT, authorizeRoles } from '../middleware/auth';
-import { Role } from '@prisma/client';
+import { registerUser, loginUser } from './auth.controller';
+import { validateBody } from '../../middleware/validate';
+import { registerSchema, loginSchema } from './auth.validation';
+import { authenticateJWT, authorizeRoles } from '../../middleware/auth';
+import { UserRole } from '@prisma/client';
 
 const router = Router();
 
@@ -23,7 +23,7 @@ const router = Router();
  *           schema:
  *             type: object
  *             required:
- *               - name:
+ *               - name
  *               - email
  *               - password
  *               - role
@@ -38,7 +38,7 @@ const router = Router();
  *                 type: string
  *                 example: StrongP@ssw0rd!
  *               role:
- *                 $ref: '#/components/schemas/Role'
+ *                 $ref: '#/components/schemas/UserRole'
  *               facilityId:
  *                 type: string
  *                 nullable: true
@@ -54,9 +54,9 @@ const router = Router();
 router.post(
   '/register',
   authenticateJWT,
-  authorizeRoles(Role.ADMIN),
+  authorizeRoles(UserRole.ADMIN),
   validateBody(registerSchema),
-  registerUser
+  registerUser,
 );
 
 /**
@@ -75,6 +75,7 @@ router.post(
  *             required:
  *               - email
  *               - password
+ *               - role
  *             properties:
  *               email:
  *                 type: string

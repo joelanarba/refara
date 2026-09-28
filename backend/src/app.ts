@@ -4,9 +4,10 @@ import helmet from 'helmet';
 import rateLimit from 'express-rate-limit';
 import { errorHandler, NotFoundError } from './middleware/errorHandler';
 import { setupSwagger } from './config/swagger';
+
 // Route imports
-import authRoutes from './routes/authRoutes';
-import referralRoutes from './routes/referralRoutes';
+import { authRoutes } from './modules/auth';
+import { referralRoutes } from './modules/referrals';
 
 const app = express();
 
@@ -14,9 +15,6 @@ const app = express();
 app.use(helmet());
 app.use(cors());
 app.use(express.json({ limit: '10kb' }));
-
-// Mount Swagger Documentation UI
-setupSwagger(app);
 
 // Global Rate Limiting
 const apiLimiter = rateLimit({
@@ -31,6 +29,8 @@ app.get('/api/v1/health', (_req: Request, res: Response) => {
   res.status(200).json({ status: 'OK', timestamp: new Date().toISOString() });
 });
 
+// Setup Swagger UI
+setupSwagger(app);
 
 // Primary API Endpoints
 app.use('/api/v1/auth', authRoutes);

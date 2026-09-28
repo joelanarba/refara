@@ -1,4 +1,4 @@
-import { PrismaClient, FacilityType, Role } from '@prisma/client';
+import { PrismaClient, FacilityType, UserRole } from '@prisma/client';
 import bcrypt from 'bcrypt';
 
 const prisma = new PrismaClient();
@@ -10,11 +10,11 @@ async function main() {
   await prisma.facility.deleteMany();
 
   const chps = await prisma.facility.create({
-    data: { name: 'Amasaman CHPS Compound', facilityType: FacilityType.CHPS_COMPOUND, location: 'Ga West, Greater Accra' },
+    data: { name: 'Amasaman CHPS Compound', type: FacilityType.CHPS_COMPOUND, location: 'Ga West, Greater Accra' },
   });
 
   const hospital = await prisma.facility.create({
-    data: { name: 'Korle Bu Teaching Hospital', facilityType: FacilityType.TEACHING_HOSPITAL, location: 'Accra' },
+    data: { name: 'Korle Bu Teaching Hospital', type: FacilityType.TEACHING_HOSPITAL, location: 'Accra' },
   });
 
   const hashedAdminPassword = await bcrypt.hash('AdminPass@2026', 12);
@@ -25,8 +25,8 @@ async function main() {
       name: 'System Admin',
       email: 'admin@health.gov.gh',
       passwordHash: hashedAdminPassword,
-      role: Role.ADMIN,
-      facilityId: hospital.id,
+      role: UserRole.ADMIN,
+      facilityId: null, // Admins don't need a facility
     },
   });
 
@@ -35,7 +35,7 @@ async function main() {
       name: 'Nurse Ama',
       email: 'ama@amasaman-chps.gh',
       passwordHash: hashedWorkerPassword,
-      role: Role.REFERRING_WORKER,
+      role: UserRole.REFERRING_WORKER,
       facilityId: chps.id,
     },
   });
@@ -45,7 +45,7 @@ async function main() {
       name: 'Dr. Mensah',
       email: 'mensah@korlebu.gh',
       passwordHash: hashedWorkerPassword,
-      role: Role.RECEIVING_WORKER,
+      role: UserRole.RECEIVING_WORKER,
       facilityId: hospital.id,
     },
   });

@@ -1,2 +1,1 @@
-// Referrals module - handles referral workflow
-// To be implemented
+export { default as referralRoutes } from './referral.routes';

@@ -22,12 +22,11 @@ enum ReferralUrgency {
   EMERGENCY
 }
 
-enum Role {
+enum UserRole {
   REFERRING_WORKER
   RECEIVING_WORKER
   ADMIN
 }
-
 
 enum ReferralStatus {
   SUBMITTED
@@ -35,14 +34,14 @@ enum ReferralStatus {
   ACCEPTED
   REJECTED
   CANCELLED
-  PATIENT_ARRIVED
+  ARRIVED
   COMPLETED
 }
 
 model Facility {
   id                 String     @id @default(uuid())
   name               String     @unique
-  facilityType       FacilityType
+  type               FacilityType
   location           String
   createdAt          DateTime   @default(now())
   updatedAt          DateTime   @updatedAt
@@ -59,12 +58,9 @@ model User {
   name          String
   email         String                  @unique
   passwordHash  String
-  role          Role
-  
-  // Make facilityId and relation optional
+  role          UserRole
   facilityId    String?
   facility      Facility?               @relation(fields: [facilityId], references: [id])
-  
   createdAt     DateTime                @default(now())
   updatedAt     DateTime                @updatedAt
 
@@ -79,10 +75,10 @@ model Referral {
   referralCode        String                  @unique
   patientName         String
   patientAge          Int
-  gestationalAgeWeeks Int
+  gestationalWeeks    Int?
   urgency             ReferralUrgency
-  reasonForReferral   String
-  currentStatus       ReferralStatus          @default(SUBMITTED)
+  reason              String
+  status              ReferralStatus          @default(SUBMITTED)
 
   referringFacilityId String
   referringFacility   Facility                @relation("OutgoingFacility", fields: [referringFacilityId], references: [id])
@@ -100,7 +96,7 @@ model Referral {
 
   @@index([referringFacilityId])
   @@index([receivingFacilityId])
-  @@index([currentStatus])
+  @@index([status])
   @@map("referrals")
 }
 
@@ -108,11 +104,11 @@ model ReferralStatusHistory {
   id             String         @id @default(uuid())
   referralId     String
   referral       Referral       @relation(fields: [referralId], references: [id], onDelete: Cascade)
-  previousStatus ReferralStatus
+  previousStatus ReferralStatus?
   newStatus      ReferralStatus
   changedByUserId String
   changedByUser  User           @relation(fields: [changedByUserId], references: [id])
-  notes          String?
+  reasonText     String?
   timestamp      DateTime       @default(now())
 
   @@index([referralId])

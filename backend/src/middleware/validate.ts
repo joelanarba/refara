@@ -1,22 +1,21 @@
 import { Request, Response, NextFunction } from 'express';
-import { ZodSchema, ZodError } from 'zod'; // Swapped AnyZodObject -> ZodSchema
+import { ZodTypeAny, ZodError } from 'zod';
 
-export const validateBody = (schema: ZodSchema) => {
+export const validateBody = (schema: ZodTypeAny) => {
   return async (req: Request, res: Response, next: NextFunction) => {
     try {
       req.body = await schema.parseAsync(req.body);
       next();
     } catch (error) {
       if (error instanceof ZodError) {
+        const message = error.errors
+          .map((err) => `${err.path.join('.')}: ${err.message}`)
+          .join(', ');
         return res.status(400).json({
-          error: 'Validation Error',
-          details: error.errors.map((err) => ({
-            field: err.path.join('.'),
-            message: err.message,
-          })),
+          error: { message: `Validation Error: ${message}`, status: 400 },
         });
       }
-      return res.status(400).json({ error: 'Invalid payload structure' });
+      return res.status(400).json({ error: { message: 'Invalid payload structure', status: 400 } });
     }
   };
 };

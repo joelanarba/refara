@@ -6,7 +6,7 @@ export class AppError extends Error {
   constructor(
     public message: string,
     public statusCode: number = 500,
-    public isOperational: boolean = true
+    public isOperational: boolean = true,
   ) {
     super(message);
     this.name = this.constructor.name;
@@ -46,16 +46,16 @@ export class ConflictError extends AppError {
 }
 
 // Async Wrapper to catch errors without try/catch blocks in controllers
-export const asyncHandler = (fn: Function) => {
+export const asyncHandler = (
+  fn: (req: Request, res: Response, next: NextFunction) => Promise<unknown> | void,
+) => {
   return (req: Request, res: Response, next: NextFunction) => {
     Promise.resolve(fn(req, res, next)).catch(next);
   };
 };
 
 // Structural Type Guard for Prisma errors if class checking encounters module variance
-function isPrismaKnownError(
-  err: unknown
-): err is { code: string; meta?: { target?: string[] } } {
+function isPrismaKnownError(err: unknown): err is { code: string; meta?: { target?: string[] } } {
   return (
     typeof err === 'object' &&
     err !== null &&
@@ -70,7 +70,7 @@ export const errorHandler = (
   err: Error,
   _req: Request,
   res: Response,
-  _next: NextFunction
+  _next: NextFunction,
 ): void => {
   // 1. Custom Operational Application Errors
   if (err instanceof AppError) {
@@ -84,8 +84,7 @@ export const errorHandler = (
   }
 
   // 2. Prisma Known Database Request Errors
-  const isPrismaError =
-    err instanceof PrismaClientKnownRequestError || isPrismaKnownError(err);
+  const isPrismaError = err instanceof PrismaClientKnownRequestError || isPrismaKnownError(err);
 
   if (isPrismaError) {
     const prismaErr = err as { code: string; meta?: { target?: string[] } };
