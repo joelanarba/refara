@@ -1,0 +1,123 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Description: Refara Full Stack Environment
+
+Parameters:
+  DBPassword:
+    Type: String
+    NoEcho: true
+    Description: Password for PostgreSQL Database
+    Default: 'RefaraDB2026!'
+
+Resources:
+  # S3 Bucket for Frontend
+  FrontendBucket:
+    Type: AWS::S3::Bucket
+    Properties:
+      BucketName: !Sub "refara-frontend-mvp-${AWS::AccountId}"
+      PublicAccessBlockConfiguration:
+        BlockPublicAcls: false
+        BlockPublicPolicy: false
+        IgnorePublicAcls: false
+        RestrictPublicBuckets: false
+      WebsiteConfiguration:
+        IndexDocument: index.html
+        ErrorDocument: index.html
+
+  FrontendBucketPolicy:
+    Type: AWS::S3::BucketPolicy
+    Properties:
+      Bucket: !Ref FrontendBucket
+      PolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Sid: PublicReadGetObject
+            Effect: Allow
+            Principal: "*"
+            Action: "s3:GetObject"
+            Resource: !Sub "${FrontendBucket.Arn}/*"
+
+  # RDS Database
+  DBSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow Postgres access
+      SecurityGroupIngress:
+        - IpProtocol: tcp
+          FromPort: 5432
+          ToPort: 5432
+          CidrIp: 0.0.0.0/0
+
+  PostgresDB:
+    Type: AWS::RDS::DBInstance
+    Properties:
+      AllocatedStorage: 20
+      DBInstanceClass: db.t3.micro
+      Engine: postgres
+      EngineVersion: '14'
+      MasterUsername: refaraadmin
+      MasterUserPassword: !Ref DBPassword
+      DBName: refara
+      PubliclyAccessible: true
+      VPCSecurityGroups:
+        - !GetAtt DBSecurityGroup.GroupId
+
+  # Elastic Beanstalk Instance Profile
+  EBInstanceRole:
+    Type: AWS::IAM::Role
+    Properties:
+      AssumeRolePolicyDocument:
+        Version: '2012-10-17'
+        Statement:
+          - Effect: Allow
+            Principal:
+              Service: ec2.amazonaws.com
+            Action: sts:AssumeRole
+      ManagedPolicyArns:
+        - arn:aws:iam::aws:policy/AWSElasticBeanstalkWebTier
+
+  EBInstanceProfile:
+    Type: AWS::IAM::InstanceProfile
+    Properties:
+      Roles:
+        - !Ref EBInstanceRole
+
+  # Elastic Beanstalk App & Env
+  BackendApp:
+    Type: AWS::ElasticBeanstalk::Application
+    Properties:
+      ApplicationName: refara-backend
+      Description: Refara Node.js Backend
+
+  BackendEnv:
+    Type: AWS::ElasticBeanstalk::Environment
+    Properties:
+      ApplicationName: !Ref BackendApp
+      EnvironmentName: refara-backend-env
+      SolutionStackName: "64bit Amazon Linux 2023 v6.11.9 running Node.js 22"
+      OptionSettings:
+        - Namespace: aws:autoscaling:launchconfiguration
+          OptionName: IamInstanceProfile
+          Value: !Ref EBInstanceProfile
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: DATABASE_URL
+          Value: !Sub "postgresql://refaraadmin:${DBPassword}@${PostgresDB.Endpoint.Address}:${PostgresDB.Endpoint.Port}/refara"
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: JWT_SECRET
+          Value: "super-secret-key-change-in-prod"
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: PORT
+          Value: "8080"
+        - Namespace: aws:elasticbeanstalk:application:environment
+          OptionName: NODE_ENV
+          Value: "production"
+
+Outputs:
+  FrontendURL:
+    Description: URL of the frontend
+    Value: !GetAtt FrontendBucket.WebsiteURL
+  BackendURL:
+    Description: URL of the backend
+    Value: !Sub "http://${BackendEnv.EndpointURL}"
+  DatabaseEndpoint:
+    Description: PostgreSQL Database Endpoint
+    Value: !GetAtt PostgresDB.Endpoint.Address

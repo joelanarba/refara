@@ -1,0 +1,50 @@
+name: Deploy to AWS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy-frontend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install dependencies
+        working-directory: ./frontend
+        run: npm ci
+      - name: Build Frontend
+        working-directory: ./frontend
+        env:
+          VITE_API_URL: /api/v1
+          VITE_MOCK_AUTH: false
+        run: npm run build
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: us-east-1
+      - name: Deploy to S3
+        run: aws s3 sync frontend/dist/ s3://refara-frontend-mvp-180111006985 --delete
+
+  deploy-backend:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Create ZIP bundle
+        working-directory: ./backend
+        run: zip -r ../backend-bundle.zip . -x "node_modules/*"
+      - name: Deploy to Elastic Beanstalk
+        uses: einaregilsson/beanstalk-deploy@v22
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          application_name: refara-backend
+          environment_name: refara-backend-env
+          version_label: refara-backend-${{ github.sha }}
+          region: us-east-1
+          deployment_package: backend-bundle.zip
