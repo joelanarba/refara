@@ -1,2 +1,2 @@
-// Users module - handles user management (CRUD)
-// To be implemented
+export * from './user.routes';
+export * from './user.controller';

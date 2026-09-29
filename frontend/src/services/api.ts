@@ -34,7 +34,7 @@ class ApiClient {
       throw new Error(error.error?.message || error.message || 'Request failed');
     }
 
-    return response.json();
+    const json = await response.json(); return json.data !== undefined ? json.data : json;
   }
 
   get<T>(endpoint: string): Promise<T> {

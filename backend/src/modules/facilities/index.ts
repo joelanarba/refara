@@ -1,2 +1,2 @@
-// Facilities module - handles facility management (CRUD)
-// To be implemented
+export * from './facility.routes';
+export * from './facility.controller';
