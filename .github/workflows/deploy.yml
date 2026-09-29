@@ -44,12 +44,13 @@ jobs:
       - name: Build Backend
         working-directory: ./backend
         run: |
-          npm install
+          npm ci
           npm run build
-          rm -rf node_modules
+          npx prisma generate
+          npm prune --omit=dev
       - name: Create ZIP bundle
         working-directory: ./backend
-        run: zip -r ../backend-bundle.zip . -x "node_modules/*"
+        run: zip -r ../backend-bundle.zip . -x "src/*" "*.ts" "*.map"
       - name: Deploy to Elastic Beanstalk
         uses: einaregilsson/beanstalk-deploy@v22
         with:
