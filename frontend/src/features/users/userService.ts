@@ -42,3 +42,17 @@ export async function getUsers(): Promise<UserSummary[]> {
   if (USE_MOCK) return MOCK_USERS;
   return apiClient.get<UserSummary[]>('/users');
 }
+
+export interface CreateUserPayload {
+  name: string;
+  email: string;
+  role: UserRole;
+  facilityId: string;
+}
+
+export async function createUser(data: CreateUserPayload): Promise<{ data: any }> {
+  if (USE_MOCK) {
+    return { data: { id: Math.random().toString(), ...data } };
+  }
+  return apiClient.post<{ data: any }>('/users', data);
+}

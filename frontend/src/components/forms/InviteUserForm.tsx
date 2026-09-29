@@ -1,7 +1,11 @@
-import { FormEvent, useState } from 'react';
-import { UserPlus, Mail, X, ChevronDown } from 'lucide-react';
+import { FormEvent, useState, useEffect } from 'react';
+import { Mail, UserPlus, X, ChevronDown } from 'lucide-react';
 import { ROLE_LABELS, ROLES } from '../../constants/roles';
 import type { UserRole } from '../../types';
+
+import { createUser } from '../../features/users/userService';
+import { getFacilities } from '../../features/facilities/facilityService';
+import type { FacilitySummary } from '../../features/facilities/types';
 
 interface InviteUserFormProps {
   onCancel?: () => void;
@@ -15,6 +19,22 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
   const [facilityId, setFacilityId] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  
+  const [facilities, setFacilities] = useState<FacilitySummary[]>([]);
+  const [isLoadingFacilities, setIsLoadingFacilities] = useState(true);
+
+  useEffect(() => {
+    getFacilities()
+      .then((data) => {
+        setFacilities(data);
+      })
+      .catch(() => {
+        setError('Failed to load facilities.');
+      })
+      .finally(() => {
+        setIsLoadingFacilities(false);
+      });
+  }, []);
 
   const handleSubmit = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
@@ -43,8 +63,10 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
     setIsSubmitting(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      await createUser({ name, email, role, facilityId });
       onSuccess?.();
+    } catch (err: any) {
+      setError(err.message || 'Failed to create user. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -155,34 +177,19 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
             <select
               value={facilityId}
               onChange={(event) => setFacilityId(event.target.value)}
+              disabled={isLoadingFacilities}
               className={`w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 pr-10 text-sm outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15 ${
                 !facilityId ? 'text-[#8fa0aa]' : 'text-[#1b2a32]'
-              }`}
+              } ${isLoadingFacilities ? 'opacity-50 cursor-not-allowed' : ''}`}
             >
               <option value="" disabled>
-                Select a facility
+                {isLoadingFacilities ? 'Loading facilities...' : 'Select a facility'}
               </option>
-              <option value="kbth" className="text-[#1b2a32]">
-                Korle Bu Teaching Hospital
-              </option>
-              <option value="acc" className="text-[#1b2a32]">
-                Adabraka Community Clinic
-              </option>
-              <option value="lgh" className="text-[#1b2a32]">
-                La General Hospital
-              </option>
-              <option value="37mh" className="text-[#1b2a32]">
-                37 Military Hospital
-              </option>
-              <option value="rrh" className="text-[#1b2a32]">
-                Ridge Regional Hospital
-              </option>
-              <option value="omh" className="text-[#1b2a32]">
-                Osu Maternity Home
-              </option>
-              <option value="tgh" className="text-[#1b2a32]">
-                Tema General Hospital
-              </option>
+              {facilities.map((fac) => (
+                <option key={fac.id} value={fac.id} className="text-[#1b2a32]">
+                  {fac.name}
+                </option>
+              ))}
             </select>
 
             <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#334752]">
