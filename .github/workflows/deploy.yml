@@ -15,7 +15,7 @@ jobs:
           node-version: 18
       - name: Install dependencies
         working-directory: ./frontend
-        run: npm ci
+        run: npm install
       - name: Build Frontend
         working-directory: ./frontend
         env:
@@ -28,6 +28,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
+          use_existing_version_if_available: true
       - name: Deploy to S3
         run: aws s3 sync frontend/dist/ s3://refara-frontend-mvp-180111006985 --delete
 
@@ -47,4 +48,5 @@ jobs:
           environment_name: refara-backend-env
           version_label: refara-backend-${{ github.sha }}
           region: us-east-1
+          use_existing_version_if_available: true
           deployment_package: backend-bundle.zip
