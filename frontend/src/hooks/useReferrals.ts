@@ -1,4 +1,4 @@
-import { getReferrals } from '@/features/referrals/referralSrvice';
+import { getReferrals } from '@/features/referrals/referralService';
 import { ReferralDirection, ReferralScope } from '@/features/referrals/types';
 import { useFetch } from './useFetch';
 

@@ -8,7 +8,7 @@ import FacilitiesPage from '../pages/FacilitiesPage';
 import UsersPage from '../pages/UsersPage';
 import NotFoundPage from '../pages/NotFoundPage';
 import ProtectedRoute from './ProtectedRoute';
-import AppLayout from '@/components/layout/Applayout';
+import AppLayout from '@/components/layout/AppLayout';
 
 // Not built yet — uncomment each as the page is created
 // import ReferralDetailPage from '../pages/ReferralDetailPage';

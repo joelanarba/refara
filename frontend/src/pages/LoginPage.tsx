@@ -1,4 +1,4 @@
-import { useAuth } from '@/features/auth/Useauth';
+import { useAuth } from '@/features/auth/useAuth';
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 

@@ -5,7 +5,7 @@ import WelcomeBanner from '../components/WelcomeBanner';
 import StatsRow from '../components/StatsRow';
 import RecentReferralsPanel from '../components/RecentReferralsPanel';
 import ReferralActivityChart from '../components/ReferralActivityChart';
-import { useAuth } from '@/features/auth/Useauth';
+import { useAuth } from '@/features/auth/useAuth';
 import { useDashboardData } from '@/hooks/useDashboardData';
 
 function greeting() {
