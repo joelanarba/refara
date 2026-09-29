@@ -1,5 +1,5 @@
 import { apiClient } from '../../services/api';
-import { ReferralListItem, ReferralScope, ReferralDirection } from './types';
+import { ReferralListItem, ReferralScope, ReferralDirection, CreateReferralPayload } from './types';
 
 const USE_MOCK = import.meta.env.VITE_MOCK_AUTH === 'true';
 const ago = (mins: number) => new Date(Date.now() - mins * 60 * 1000).toISOString();
@@ -100,4 +100,8 @@ export async function getReferrals(
   }
   const params = scope === 'facility' ? `?direction=${direction}` : '';
   return apiClient.get<ReferralListItem[]>(`/referrals${params}`);
+}
+
+export async function createReferral(payload: CreateReferralPayload): Promise<ReferralListItem> {
+  return apiClient.post<ReferralListItem>('/referrals', payload);
 }

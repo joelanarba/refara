@@ -12,7 +12,7 @@ import AppLayout from '@/components/layout/AppLayout';
 
 // Not built yet — uncomment each as the page is created
 // import ReferralDetailPage from '../pages/ReferralDetailPage';
-// import ReferralCreatePage from '../pages/ReferralCreatePage';
+import ReferralCreatePage from '../pages/ReferralCreatePage';
 
 export default function AppRoutes() {
   return (
@@ -28,9 +28,9 @@ export default function AppRoutes() {
           {/* <Route path={ROUTES.REFERRAL_DETAIL} element={<ReferralDetailPage />} /> */}
 
           {/* Protected — referring workers only */}
-          {/* <Route element={<ProtectedRoute allowedRoles={['REFERRING_WORKER']} />}>
+          <Route element={<ProtectedRoute allowedRoles={['REFERRING_WORKER']} />}>
             <Route path={ROUTES.REFERRAL_CREATE} element={<ReferralCreatePage />} />
-          </Route> */}
+          </Route>
 
           {/* Protected — admin only */}
           <Route element={<ProtectedRoute allowedRoles={['ADMIN']} />}>

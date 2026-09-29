@@ -1,6 +1,6 @@
 import { ReferralStatus, ReferralUrgency } from '../../types';
 
-/** Flattened shape for list/table views — facility names included directly. */
+/** Flattened shape for list/table views - facility names included directly. */
 export interface ReferralListItem {
   id: string;
   code: string;
@@ -18,3 +18,12 @@ export interface ReferralListItem {
 
 export type ReferralScope = 'network' | 'facility';
 export type ReferralDirection = 'all' | 'sent' | 'received';
+
+export interface CreateReferralPayload {
+  patientName: string;
+  patientAge: number;
+  gestationalWeeks?: number;
+  urgency: ReferralUrgency;
+  reason: string;
+  receivingFacilityId: string;
+}
