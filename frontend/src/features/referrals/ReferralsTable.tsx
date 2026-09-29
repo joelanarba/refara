@@ -1,6 +1,6 @@
+import { CSSProperties } from 'react';
 import { timeAgo } from '@/utils';
 import { ReferralListItem } from './types';
-
 
 interface ReferralsTableProps {
   referrals: ReferralListItem[];
@@ -13,9 +13,17 @@ function titleCase(s: string) {
   return s.charAt(0) + s.slice(1).toLowerCase();
 }
 
+// The base .table-head / .referral-row rules in index.css run 9-11px —
+// fine for a dense admin table, hard to scan otherwise. Sizes are set
+// explicitly here instead of inheriting them.
+const headStyle: CSSProperties = { fontSize: 11, letterSpacing: 0.4 };
+const idStyle: CSSProperties = { fontSize: 12 };
+const nameStyle: CSSProperties = { fontSize: 13 };
+const subTextStyle: CSSProperties = { fontSize: 11.5, marginTop: 3 };
+const badgeStyle: CSSProperties = { fontSize: 11, padding: '6px 9px' };
+const timeStyle: CSSProperties = { fontSize: 11 };
+
 export default function ReferralsTable({
-  
-  
   referrals,
   loading,
   search,
@@ -42,19 +50,20 @@ export default function ReferralsTable({
             placeholder="Search referrals..."
             value={search}
             onChange={(e) => onSearchChange(e.target.value)}
+            style={{ fontSize: 13 }}
           />
         </div>
-        <button type="button" className="filter-button">
+        <button type="button" className="filter-button" style={{ fontSize: 12 }}>
           <FilterIcon />
           Filters
           <ChevronDownIcon />
         </button>
-        <span className="result-count">
+        <span className="result-count" style={{ fontSize: 12 }}>
           {loading ? '…' : `${filtered.length} referral${filtered.length === 1 ? '' : 's'}`}
         </span>
       </div>
 
-      <div className="table-head">
+      <div className="table-head" style={headStyle}>
         <span>REFERENCE</span>
         <span>PATIENT</span>
         <span>FACILITIES</span>
@@ -65,25 +74,37 @@ export default function ReferralsTable({
       </div>
 
       {loading && (
-        <div style={{ padding: '20px 24px', color: '#9aa8aa', fontSize: 11 }}>Loading…</div>
+        <div style={{ padding: '20px 24px', color: '#9aa8aa', fontSize: 13 }}>Loading…</div>
       )}
 
       {!loading && filtered.length === 0 && (
-        <div style={{ padding: '20px 24px', color: '#9aa8aa', fontSize: 11 }}>
+        <div style={{ padding: '20px 24px', color: '#9aa8aa', fontSize: 13 }}>
           No referrals found.
         </div>
       )}
 
       {!loading &&
         filtered.map((r) => (
-          <button key={r.id} type="button" className="referral-row" style={{ cursor: 'pointer' }} onClick={() => { window.location.href = `/referrals/${r.id}` }}>
-            <span className="referral-id">{r.code}</span>
+          <button
+            key={r.id}
+            type="button"
+            className="referral-row"
+            style={{ cursor: 'pointer' }}
+            onClick={() => {
+              window.location.href = `/referrals/${r.id}`;
+            }}
+          >
+            <span className="referral-id" style={idStyle}>
+              {r.code}
+            </span>
 
             <div className="patient-cell">
-              <span className="patient-avatar">{r.patientInitials}</span>
+              <span className="patient-avatar" style={{ fontSize: 11 }}>
+                {r.patientInitials}
+              </span>
               <div>
-                <strong>{r.patientName}</strong>
-                <span>
+                <strong style={nameStyle}>{r.patientName}</strong>
+                <span style={subTextStyle}>
                   {r.patientAge} years · {r.reason}
                 </span>
               </div>
@@ -91,19 +112,23 @@ export default function ReferralsTable({
 
             <div className="facility-cell">
               <div>
-                <strong>{r.referringFacilityName}</strong>
-                <span>→ {r.receivingFacilityName}</span>
+                <strong style={nameStyle}>{r.referringFacilityName}</strong>
+                <span style={subTextStyle}>→ {r.receivingFacilityName}</span>
               </div>
             </div>
 
-            <span className={`urgency ${r.urgency.toLowerCase()}`}>{titleCase(r.urgency)}</span>
+            <span className={`urgency ${r.urgency.toLowerCase()}`} style={badgeStyle}>
+              {titleCase(r.urgency)}
+            </span>
 
-            <span className={`status-pill status-${r.status.toLowerCase()}`}>
+            <span className={`status-pill status-${r.status.toLowerCase()}`} style={badgeStyle}>
               <i />
               {titleCase(r.status)}
             </span>
 
-            <span className="row-time">{timeAgo(r.updatedAt)}</span>
+            <span className="row-time" style={timeStyle}>
+              {timeAgo(r.updatedAt)}
+            </span>
 
             <span className="row-more">
               <MoreIcon />

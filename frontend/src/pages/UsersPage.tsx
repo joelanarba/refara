@@ -3,6 +3,7 @@ import { useUsers } from '@/hooks/useUsers';
 import DashboardHeader from '../features/dashboard/components/DashboardHeader';
 import UserRow from '@/features/users/UserRow';
 import InviteUserForm from '@/components/forms/InviteUserForm';
+import Modal from '@/components/ui/Modal';
 
 export default function UsersPage() {
   const { data: users, loading, refetch } = useUsers();
@@ -15,7 +16,11 @@ export default function UsersPage() {
         title="Users & access"
         subtitle="Authorized people and their workspace permissions."
         action={
-          <button type="button" className="primary-button" onClick={() => setIsInviteModalOpen(true)}>
+          <button
+            type="button"
+            className="primary-button"
+            onClick={() => setIsInviteModalOpen(true)}
+          >
             <UserPlusIcon />
             Invite user
           </button>
@@ -28,15 +33,15 @@ export default function UsersPage() {
       </div>
 
       {isInviteModalOpen && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
-          <InviteUserForm 
-            onCancel={() => setIsInviteModalOpen(false)} 
+        <Modal onClose={() => setIsInviteModalOpen(false)}>
+          <InviteUserForm
+            onCancel={() => setIsInviteModalOpen(false)}
             onSuccess={() => {
               setIsInviteModalOpen(false);
               if (refetch) refetch();
-            }} 
+            }}
           />
-        </div>
+        </Modal>
       )}
     </>
   );

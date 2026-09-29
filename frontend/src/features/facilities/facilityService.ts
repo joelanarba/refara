@@ -1,5 +1,5 @@
 import { apiClient } from '../../services/api';
-import { FacilitySummary } from './types';
+import { FacilitySummary, CreateFacilityPayload } from './types';
 
 const USE_MOCK = import.meta.env.VITE_MOCK_AUTH === 'true';
 
@@ -38,20 +38,36 @@ const MOCK_FACILITIES: FacilitySummary[] = [
   },
 ];
 
-const TYPE_LABELS: Record<FacilitySummary['type'], string> = {
-  CHPS_COMPOUND: 'Community clinic',
-  HEALTH_CENTER: 'Health center',
-  DISTRICT_HOSPITAL: 'District hospital',
-  REGIONAL_HOSPITAL: 'Regional hospital',
-  TEACHING_HOSPITAL: 'Teaching hospital',
-  PRIVATE_CLINIC: 'Private clinic',
-};
+export const FACILITY_TYPE_OPTIONS: { value: FacilitySummary['type']; label: string }[] = [
+  { value: 'CHPS_COMPOUND', label: 'CHPS Compound' },
+  { value: 'HEALTH_CENTER', label: 'Health Center' },
+  { value: 'DISTRICT_HOSPITAL', label: 'District Hospital' },
+  { value: 'REGIONAL_HOSPITAL', label: 'Regional Hospital' },
+  { value: 'TEACHING_HOSPITAL', label: 'Teaching Hospital' },
+  { value: 'PRIVATE_CLINIC', label: 'Private Clinic' },
+];
 
 export function facilityTypeLabel(type: FacilitySummary['type']) {
-  return TYPE_LABELS[type];
+  return FACILITY_TYPE_OPTIONS.find((o) => o.value === type)?.label ?? type;
 }
 
 export async function getFacilities(): Promise<FacilitySummary[]> {
   if (USE_MOCK) return MOCK_FACILITIES;
   return apiClient.get<FacilitySummary[]>('/facilities');
+}
+
+export async function createFacility(input: CreateFacilityPayload): Promise<FacilitySummary> {
+  if (USE_MOCK) {
+    const facility: FacilitySummary = {
+      id: `fac-${MOCK_FACILITIES.length + 1}`,
+      name: input.name,
+      type: input.type,
+      location: input.location,
+      isOnline: true,
+      activeReferrals: 0,
+    };
+    MOCK_FACILITIES.push(facility);
+    return facility;
+  }
+  return apiClient.post<FacilitySummary>('/facilities', input);
 }

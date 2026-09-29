@@ -1,6 +1,7 @@
 import { UserRole } from '@/types';
 import { apiClient } from '../../services/api';
 import { UserSummary } from './types';
+import { getFacilities } from '../facilities/facilityService';
 
 const USE_MOCK = import.meta.env.VITE_MOCK_AUTH === 'true';
 
@@ -50,9 +51,21 @@ export interface CreateUserPayload {
   facilityId: string;
 }
 
-export async function createUser(data: CreateUserPayload): Promise<{ data: any }> {
+export async function createUser(data: CreateUserPayload): Promise<UserSummary> {
   if (USE_MOCK) {
-    return { data: { id: Math.random().toString(), ...data } };
+    // Mock store only keys facilities by id — resolve the name for display.
+    const facilities = await getFacilities();
+    const facility = facilities.find((f) => f.id === data.facilityId);
+
+    const user: UserSummary = {
+      id: `u-${MOCK_USERS.length + 1}`,
+      name: data.name,
+      role: data.role,
+      facilityName: facility?.name ?? 'Unknown facility',
+      isActive: true,
+    };
+    MOCK_USERS.push(user);
+    return user;
   }
-  return apiClient.post<{ data: any }>('/users', data);
+  return apiClient.post<UserSummary>('/users', data);
 }

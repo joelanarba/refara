@@ -1474,6 +1474,41 @@ button:disabled {
   font-size: 10px;
   padding: 0;
 }
+.password-input-wrap {
+  position: relative;
+}
+
+.password-input-wrap input {
+  width: 100%;
+  padding-right: 42px;
+}
+
+.password-toggle {
+  position: absolute;
+  right: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+  background: transparent;
+  padding: 4px;
+  color: #8a8a8a;
+  cursor: pointer;
+}
+
+.password-toggle:hover {
+  color: #5c3d2e;
+}
+
+.password-toggle:focus-visible {
+  outline: 2px solid #5c3d2e;
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 .login-button {
   height: 43px;
   margin-top: 2px;

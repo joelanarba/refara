@@ -1,11 +1,11 @@
 import { FormEvent, useState, useEffect } from 'react';
-import { Mail, UserPlus, X, ChevronDown } from 'lucide-react';
 import { ROLE_LABELS, ROLES } from '../../constants/roles';
 import type { UserRole } from '../../types';
 
 import { createUser } from '../../features/users/userService';
 import { getFacilities } from '../../features/facilities/facilityService';
 import type { FacilitySummary } from '../../features/facilities/types';
+import { labelStyle, inputStyle, fieldGroupStyle } from './formFieldStyles';
 
 interface InviteUserFormProps {
   onCancel?: () => void;
@@ -19,7 +19,7 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
   const [facilityId, setFacilityId] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [facilities, setFacilities] = useState<FacilitySummary[]>([]);
   const [isLoadingFacilities, setIsLoadingFacilities] = useState(true);
 
@@ -75,136 +75,169 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-[450px] rounded-2xl border border-slate-100 bg-white p-6 shadow-xl sm:p-7 text-slate-800"
+      style={{
+        background: '#fff',
+        borderRadius: 16,
+        padding: 28,
+        width: '100%',
+        maxWidth: 420,
+        boxShadow: '0 24px 60px rgba(20,40,44,.22)',
+      }}
     >
-      <div className="mb-6 flex items-start justify-between">
-        <div className="flex items-start gap-3.5">
-          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[#e6f2f2] text-[#4c7c7f]">
-            <UserPlus className="h-6 w-6 stroke-[1.8]" />
-          </div>
+      <div style={{ display: 'flex', alignItems: 'flex-start', gap: 14, marginBottom: 24 }}>
+        <span
+          style={{
+            width: 44,
+            height: 44,
+            flexShrink: 0,
+            borderRadius: 12,
+            display: 'grid',
+            placeItems: 'center',
+            color: '#498d96',
+            background: '#e7f3f3',
+          }}
+        >
+          <UserPlusIcon />
+        </span>
 
-          <div>
-            <h2 className="text-xl font-bold tracking-tight text-[#1b2a32]">Invite user</h2>
-            <p className="mt-0.5 text-[13px] text-[#6b7d87]">
-              Send a workspace invitation to a new team member.
-            </p>
-          </div>
+        <div style={{ flex: 1, minWidth: 0 }}>
+          <h2
+            style={{
+              margin: 0,
+              fontFamily: "'Manrope', sans-serif",
+              fontSize: 17,
+              color: '#253b42',
+            }}
+          >
+            Invite user
+          </h2>
+          <p style={{ margin: '4px 0 0', color: '#87979a', fontSize: 12.5, lineHeight: 1.4 }}>
+            Send a workspace invitation to a new team member.
+          </p>
         </div>
 
         {onCancel && (
           <button
             type="button"
+            className="icon-button"
             onClick={onCancel}
-            className="p-1 text-slate-400 transition hover:text-slate-600"
             aria-label="Close"
+            style={{ marginTop: -4, marginRight: -4 }}
           >
-            <X className="h-5 w-5" />
+            <CloseIcon />
           </button>
         )}
       </div>
 
       {error && (
-        <div className="mb-4 rounded-xl border border-rose-100 bg-rose-50 px-3.5 py-2 text-xs font-medium text-rose-600">
+        <p style={{ color: '#bd6255', fontSize: 13, margin: '0 0 16px', fontWeight: 500 }}>
           {error}
-        </div>
+        </p>
       )}
 
-      <div className="space-y-4">
-        <div>
-          <label className="mb-1.5 block text-[13px] font-semibold text-[#334752]">Full name</label>
+      <div style={fieldGroupStyle}>
+        <label style={labelStyle} htmlFor="inviteName">
+          Full name
+        </label>
+        <input
+          id="inviteName"
+          type="text"
+          placeholder="e.g. Abena Sarkodie"
+          value={name}
+          onChange={(event) => setName(event.target.value)}
+          style={inputStyle}
+        />
+      </div>
 
+      <div style={fieldGroupStyle}>
+        <label style={labelStyle} htmlFor="inviteEmail">
+          Email address
+        </label>
+        <div style={{ position: 'relative' }}>
+          <span
+            style={{
+              position: 'absolute',
+              left: 14,
+              top: '50%',
+              transform: 'translateY(-50%)',
+              color: '#a6b2b3',
+              display: 'flex',
+              pointerEvents: 'none',
+            }}
+          >
+            <MailIcon />
+          </span>
           <input
-            type="text"
-            value={name}
-            onChange={(event) => setName(event.target.value)}
-            placeholder="e.g. Abena Sarkodie"
-            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-[#1b2a32] placeholder-[#8fa0aa] outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15"
+            id="inviteEmail"
+            type="email"
+            placeholder="name@healthnetwork.org"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            style={{ ...inputStyle, paddingLeft: 40 }}
           />
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-[13px] font-semibold text-[#334752]">
-            Email address
-          </label>
-
-          <div className="relative">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3.5 text-[#8fa0aa]">
-              <Mail className="h-4 w-4 stroke-[1.8]" />
-            </div>
-
-            <input
-              type="email"
-              value={email}
-              onChange={(event) => setEmail(event.target.value)}
-              placeholder="name@healthnetwork.org"
-              className="w-full rounded-xl border border-slate-200 bg-white py-2.5 pl-10 pr-3.5 text-sm text-[#1b2a32] placeholder-[#8fa0aa] outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-[13px] font-semibold text-[#334752]">Role</label>
-
-          <div className="relative">
-            <select
-              value={role}
-              onChange={(event) => setRole(event.target.value as UserRole)}
-              className={`w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 pr-10 text-sm outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15 ${
-                !role ? 'text-[#8fa0aa]' : 'text-[#1b2a32]'
-              }`}
-            >
-              <option value="" disabled>
-                Select a role
-              </option>
-
-              {Object.values(ROLES).map((value) => (
-                <option key={value} value={value} className="text-[#1b2a32]">
-                  {ROLE_LABELS[value]}
-                </option>
-              ))}
-            </select>
-
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#334752]">
-              <ChevronDown className="h-4 w-4 stroke-[2]" />
-            </div>
-          </div>
-        </div>
-
-        <div>
-          <label className="mb-1.5 block text-[13px] font-semibold text-[#334752]">Facility</label>
-
-          <div className="relative">
-            <select
-              value={facilityId}
-              onChange={(event) => setFacilityId(event.target.value)}
-              disabled={isLoadingFacilities}
-              className={`w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 pr-10 text-sm outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15 ${
-                !facilityId ? 'text-[#8fa0aa]' : 'text-[#1b2a32]'
-              } ${isLoadingFacilities ? 'opacity-50 cursor-not-allowed' : ''}`}
-            >
-              <option value="" disabled>
-                {isLoadingFacilities ? 'Loading facilities...' : 'Select a facility'}
-              </option>
-              {facilities.map((fac) => (
-                <option key={fac.id} value={fac.id} className="text-[#1b2a32]">
-                  {fac.name}
-                </option>
-              ))}
-            </select>
-
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#334752]">
-              <ChevronDown className="h-4 w-4 stroke-[2]" />
-            </div>
-          </div>
         </div>
       </div>
 
-      <div className="mt-6 flex items-center justify-end gap-3 border-t border-slate-100 pt-5">
+      <div style={fieldGroupStyle}>
+        <label style={labelStyle} htmlFor="inviteRole">
+          Role
+        </label>
+        <select
+          id="inviteRole"
+          value={role}
+          onChange={(event) => setRole(event.target.value as UserRole)}
+          style={{ ...inputStyle, color: role ? '#2a4148' : '#a6b2b3' }}
+        >
+          <option value="" disabled>
+            Select a role
+          </option>
+          {Object.values(ROLES).map((value) => (
+            <option key={value} value={value}>
+              {ROLE_LABELS[value]}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div style={{ ...fieldGroupStyle, marginBottom: 8 }}>
+        <label style={labelStyle} htmlFor="inviteFacility">
+          Facility
+        </label>
+        <select
+          id="inviteFacility"
+          value={facilityId}
+          onChange={(event) => setFacilityId(event.target.value)}
+          disabled={isLoadingFacilities}
+          style={{ ...inputStyle, color: facilityId ? '#2a4148' : '#a6b2b3' }}
+        >
+          <option value="" disabled>
+            {isLoadingFacilities ? 'Loading facilities...' : 'Select a facility'}
+          </option>
+          {facilities.map((fac) => (
+            <option key={fac.id} value={fac.id}>
+              {fac.name}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      <div
+        style={{
+          display: 'flex',
+          justifyContent: 'flex-end',
+          gap: 10,
+          borderTop: '1px solid #edf2f2',
+          marginTop: 20,
+          paddingTop: 20,
+        }}
+      >
         {onCancel && (
           <button
             type="button"
+            className="secondary-button"
             onClick={onCancel}
-            className="cursor-pointer rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-[#334752] transition hover:bg-slate-50"
+            disabled={isSubmitting}
+            style={{ fontSize: 13, padding: '11px 18px' }}
           >
             Cancel
           </button>
@@ -212,13 +245,58 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
 
         <button
           type="submit"
+          className="primary-button"
           disabled={isSubmitting}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#86b3b5] px-5 py-2.5 text-sm font-medium text-white shadow-xs transition hover:bg-[#729fa1] active:bg-[#638e90] disabled:cursor-not-allowed disabled:opacity-50"
+          style={{ fontSize: 13, padding: '11px 18px' }}
         >
-          <Mail className="h-4 w-4 stroke-[2]" />
-          <span>{isSubmitting ? 'Sending...' : 'Send invitation'}</span>
+          <MailIcon />
+          {isSubmitting ? 'Sending...' : 'Send invitation'}
         </button>
       </div>
     </form>
+  );
+}
+
+function UserPlusIcon() {
+  return (
+    <svg
+      width="18"
+      height="18"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2M9 11a4 4 0 1 0 0-8 4 4 0 0 0 0 8zM19 8v6M22 11h-6" />
+    </svg>
+  );
+}
+function MailIcon() {
+  return (
+    <svg
+      width="15"
+      height="15"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <rect x="2" y="4" width="20" height="16" rx="2" />
+      <path d="M2 7l10 6 10-6" />
+    </svg>
+  );
+}
+function CloseIcon() {
+  return (
+    <svg
+      width="16"
+      height="16"
+      viewBox="0 0 24 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="2"
+    >
+      <path d="M18 6L6 18M6 6l12 12" />
+    </svg>
   );
 }
