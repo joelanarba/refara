@@ -1,9 +1,12 @@
+import { useState } from 'react';
 import { useUsers } from '@/hooks/useUsers';
 import DashboardHeader from '../features/dashboard/components/DashboardHeader';
 import UserRow from '@/features/users/UserRow';
+import InviteUserForm from '@/components/forms/InviteUserForm';
 
 export default function UsersPage() {
-  const { data: users, loading } = useUsers();
+  const { data: users, loading, refetch } = useUsers();
+  const [isInviteModalOpen, setIsInviteModalOpen] = useState(false);
 
   return (
     <>
@@ -12,7 +15,7 @@ export default function UsersPage() {
         title="Users & access"
         subtitle="Authorized people and their workspace permissions."
         action={
-          <button type="button" className="primary-button">
+          <button type="button" className="primary-button" onClick={() => setIsInviteModalOpen(true)}>
             <UserPlusIcon />
             Invite user
           </button>
@@ -20,9 +23,21 @@ export default function UsersPage() {
       />
 
       <div className="panel users-panel">
-        {loading && <p style={{ color: '#9aa8aa', fontSize: 12, padding: '17px 0' }}>Loading…</p>}
+        {loading && <p style={{ color: '#9aa8aa', fontSize: 12, padding: '17px 0' }}>Loading...</p>}
         {!loading && users?.map((u, i) => <UserRow key={u.id} user={u} index={i} />)}
       </div>
+
+      {isInviteModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 p-4 backdrop-blur-sm">
+          <InviteUserForm 
+            onCancel={() => setIsInviteModalOpen(false)} 
+            onSuccess={() => {
+              setIsInviteModalOpen(false);
+              if (refetch) refetch();
+            }} 
+          />
+        </div>
+      )}
     </>
   );
 }
