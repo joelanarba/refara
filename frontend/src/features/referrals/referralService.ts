@@ -1,5 +1,12 @@
 import { apiClient } from '../../services/api';
-import { ReferralListItem, ReferralScope, ReferralDirection, CreateReferralPayload } from './types';
+import {
+  ReferralListItem,
+  ReferralScope,
+  ReferralDirection,
+  CreateReferralPayload,
+  ReferralDetail,
+  UpdateReferralStatusPayload,
+} from './types';
 
 const USE_MOCK = import.meta.env.VITE_MOCK_AUTH === 'true';
 const ago = (mins: number) => new Date(Date.now() - mins * 60 * 1000).toISOString();
@@ -77,17 +84,13 @@ const ALL_REFERRALS: ReferralListItem[] = [
   },
 ];
 
-// The facility the mock facility-user belongs to (Ama Mensah / Kofi Asante demo accounts)
 const MOCK_MY_FACILITY = 'Adabraka Community Clinic';
 
 function filterByDirection(items: ReferralListItem[], direction: ReferralDirection) {
-  if (direction === 'sent')
-    return items.filter((r) => r.referringFacilityName === MOCK_MY_FACILITY);
-  if (direction === 'received')
-    return items.filter((r) => r.receivingFacilityName === MOCK_MY_FACILITY);
+  if (direction === 'sent') return items.filter((r) => r.referringFacilityName === MOCK_MY_FACILITY);
+  if (direction === 'received') return items.filter((r) => r.receivingFacilityName === MOCK_MY_FACILITY);
   return items.filter(
-    (r) =>
-      r.referringFacilityName === MOCK_MY_FACILITY || r.receivingFacilityName === MOCK_MY_FACILITY,
+    (r) => r.referringFacilityName === MOCK_MY_FACILITY || r.receivingFacilityName === MOCK_MY_FACILITY,
   );
 }
 
@@ -104,4 +107,15 @@ export async function getReferrals(
 
 export async function createReferral(payload: CreateReferralPayload): Promise<ReferralListItem> {
   return apiClient.post<ReferralListItem>('/referrals', payload);
+}
+
+export async function getReferralById(id: string): Promise<ReferralDetail> {
+  return apiClient.get<ReferralDetail>(`/referrals/${id}`);
+}
+
+export async function updateReferralStatus(
+  id: string,
+  payload: UpdateReferralStatusPayload,
+): Promise<ReferralDetail> {
+  return apiClient.patch<ReferralDetail>(`/referrals/${id}/status`, payload);
 }

@@ -1,6 +1,7 @@
 import { timeAgo } from '@/utils';
 import { ReferralListItem } from './types';
 
+
 interface ReferralsTableProps {
   referrals: ReferralListItem[];
   loading?: boolean;
@@ -13,6 +14,8 @@ function titleCase(s: string) {
 }
 
 export default function ReferralsTable({
+  
+  
   referrals,
   loading,
   search,
@@ -73,7 +76,7 @@ export default function ReferralsTable({
 
       {!loading &&
         filtered.map((r) => (
-          <button key={r.id} type="button" className="referral-row" style={{ cursor: 'default' }}>
+          <button key={r.id} type="button" className="referral-row" style={{ cursor: 'pointer' }} onClick={() => { window.location.href = `/referrals/${r.id}` }}>
             <span className="referral-id">{r.code}</span>
 
             <div className="patient-cell">

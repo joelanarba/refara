@@ -27,3 +27,42 @@ export interface CreateReferralPayload {
   reason: string;
   receivingFacilityId: string;
 }
+
+export interface ReferralStatusHistory {
+  id: string;
+  referralId: string;
+  previousStatus: ReferralStatus | null;
+  newStatus: ReferralStatus;
+  reasonText: string | null;
+  timestamp: string;
+  changedByUser: {
+    id: string;
+    name: string;
+    role: string;
+  };
+}
+
+export interface ReferralDetail {
+  id: string;
+  code: string;
+  patientName: string;
+  patientAge: number;
+  gestationalWeeks: number | null;
+  reason: string;
+  urgency: ReferralUrgency;
+  status: ReferralStatus;
+  referringFacilityId: string;
+  receivingFacilityId: string;
+  createdByUserId: string;
+  createdAt: string;
+  updatedAt: string;
+  referringFacility: { id: string; name: string; type: string };
+  receivingFacility: { id: string; name: string; type: string };
+  createdByUser: { id: string; name: string; email: string };
+  statusHistory: ReferralStatusHistory[];
+}
+
+export interface UpdateReferralStatusPayload {
+  newStatus: ReferralStatus;
+  reasonText?: string;
+}
