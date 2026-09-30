@@ -6,6 +6,7 @@ import type { UserRole } from '../../types';
 import { createUser } from '../../features/users/userService';
 import { getFacilities } from '../../features/facilities/facilityService';
 import type { FacilitySummary } from '../../features/facilities/types';
+import { copyToClipboard } from '@/utils';
 
 interface InviteUserFormProps {
   onCancel?: () => void;
@@ -24,8 +25,8 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
   const [facilities, setFacilities] = useState<FacilitySummary[]>([]);
   const [isLoadingFacilities, setIsLoadingFacilities] = useState(true);
 
-  const copyToClipboard = () => {
-    navigator.clipboard.writeText(`Email: ${email}\nPassword: Refara2026!`);
+  const handleCopy = () => {
+    copyToClipboard(`Email: ${email}\nPassword: Refara2026!`);
   };
 
   useEffect(() => {
@@ -97,7 +98,8 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
             <span className="text-sm font-mono text-slate-800 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">Refara2026!</span>
           </div>
           <button 
-            onClick={copyToClipboard}
+            type="button"
+            onClick={handleCopy}
             className="absolute top-4 right-4 text-slate-400 hover:text-[#86b3b5] transition flex items-center gap-1 text-xs font-medium bg-white px-2 py-1 rounded-md border border-slate-200 shadow-sm"
           >
             Copy

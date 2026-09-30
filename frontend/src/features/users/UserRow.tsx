@@ -1,5 +1,6 @@
 import { UserSummary } from './types';
 import { userRoleDisplay } from './userService';
+import { copyToClipboard } from '@/utils';
 
 function initials(name: string) {
   const words = name.split(' ').filter((w) => !w.endsWith('.'));
@@ -43,7 +44,7 @@ export default function UserRow({ user, index }: { user: UserSummary; index: num
       {user.isPending ? (
         <button 
           type="button"
-          onClick={() => navigator.clipboard.writeText(`Email: ${user.email}\nPassword: Refara2026!`)}
+          onClick={() => copyToClipboard(`Email: ${user.email}\nPassword: Refara2026!`)}
           className="row-more"
           title="Copy temporary credentials"
           aria-label="Copy temporary credentials"
