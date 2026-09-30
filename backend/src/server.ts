@@ -8,6 +8,11 @@ const start = async () => {
     await prisma.$connect();
     console.log('Database connected successfully via Prisma');
 
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TYPE "UserRole" ADD VALUE 'WORKER';`);
+      console.log('Added WORKER to UserRole');
+    } catch(e) {}
+
     const server = app.listen(config.port, () => {
       console.log(`Server running on port ${config.port} in ${config.nodeEnv} mode`);
       console.log(`Health check available at: http://localhost:${config.port}/api/v1/health`);
