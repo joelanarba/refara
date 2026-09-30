@@ -19,7 +19,14 @@ class ApiClient {
     };
 
     // Add auth token if available
-    const token = localStorage.getItem('token');
+    let token = null;
+    try {
+      const authStr = localStorage.getItem('maternalink_auth');
+      if (authStr) {
+        token = JSON.parse(authStr).token;
+      }
+    } catch (e) {}
+
     if (token) {
       config.headers = {
         ...config.headers,

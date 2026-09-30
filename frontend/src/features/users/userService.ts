@@ -8,14 +8,14 @@ const MOCK_USERS: UserSummary[] = [
   {
     id: 'u-1',
     name: 'Ama Mensah',
-    role: 'REFERRING_WORKER',
+    role: 'WORKER',
     facilityName: 'Adabraka Community Clinic',
     isActive: true,
   },
   {
     id: 'u-2',
     name: 'Dr. Kojo Asare',
-    role: 'RECEIVING_WORKER',
+    role: 'WORKER',
     facilityName: 'Korle Bu Teaching Hospital',
     isActive: true,
   },
@@ -29,8 +29,8 @@ const MOCK_USERS: UserSummary[] = [
 ];
 
 const ROLE_DISPLAY: Record<UserRole, string> = {
-  REFERRING_WORKER: 'Healthcare Worker',
-  RECEIVING_WORKER: 'Healthcare Worker',
+  WORKER: 'Healthcare Worker',
+  WORKER: 'Healthcare Worker',
   ADMIN: 'System Administrator',
 };
 

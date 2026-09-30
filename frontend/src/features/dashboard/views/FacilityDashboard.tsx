@@ -20,7 +20,7 @@ export default function FacilityDashboard() {
   const { stats, referrals, activity } = useDashboardData('facility');
 
   const firstName = user?.name.split(' ')[0] ?? '';
-  const canCreate = user?.role === 'REFERRING_WORKER';
+  const canCreate = user?.role === 'WORKER';
 
   return (
     <>

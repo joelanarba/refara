@@ -28,7 +28,7 @@ const options: swaggerJSDoc.Options = {
       schemas: {
         UserRole: {
           type: 'string',
-          enum: ['REFERRING_WORKER', 'RECEIVING_WORKER', 'ADMIN'],
+          enum: ['WORKER', 'ADMIN'],
         },
         ReferralUrgency: {
           type: 'string',

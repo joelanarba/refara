@@ -28,7 +28,7 @@ export default function AppRoutes() {
           <Route path={ROUTES.REFERRAL_DETAIL} element={<ReferralDetailPage />} />
 
           {/* Protected — referring workers only */}
-          <Route element={<ProtectedRoute allowedRoles={['REFERRING_WORKER']} />}>
+          <Route element={<ProtectedRoute allowedRoles={['WORKER']} />}>
             <Route path={ROUTES.REFERRAL_CREATE} element={<ReferralCreatePage />} />
           </Route>
 

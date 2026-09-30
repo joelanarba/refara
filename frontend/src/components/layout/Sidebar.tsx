@@ -8,7 +8,7 @@ interface NavItem {
   to: string;
   label: string;
   icon: ReactNode;
-  roles?: Array<'REFERRING_WORKER' | 'RECEIVING_WORKER' | 'ADMIN'>;
+  roles?: Array<'WORKER' | 'WORKER' | 'ADMIN'>;
   badge?: number;
 }
 
@@ -36,7 +36,7 @@ export default function Sidebar({ open, pendingReferralsCount }: SidebarProps) {
       to: ROUTES.REFERRAL_CREATE,
       label: 'New referral',
       icon: <PlusIcon />,
-      roles: ['REFERRING_WORKER'],
+      roles: ['WORKER'],
     },
     { to: ROUTES.FACILITIES, label: 'Facilities', icon: <BuildingIcon />, roles: ['ADMIN'] },
     { to: ROUTES.USERS, label: 'Users & access', icon: <UsersIcon />, roles: ['ADMIN'] },

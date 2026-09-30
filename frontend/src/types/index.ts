@@ -1,7 +1,7 @@
 // Shared TypeScript types and interfaces
 // These should mirror the backend types for API contracts
 
-export type UserRole = 'REFERRING_WORKER' | 'RECEIVING_WORKER' | 'ADMIN';
+export type UserRole = 'WORKER' | 'ADMIN';
 
 export type FacilityType =
   | 'CHPS_COMPOUND'

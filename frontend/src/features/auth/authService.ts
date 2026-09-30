@@ -16,7 +16,7 @@ function mockUserFor(email: string): User {
       id: 'mock-ref-1',
       name: 'Ama Mensah',
       email,
-      role: 'REFERRING_WORKER',
+      role: 'WORKER',
       facilityId: 'fac-1',
     };
   }
@@ -26,7 +26,7 @@ function mockUserFor(email: string): User {
       id: 'mock-rec-1',
       name: 'Kofi Asante',
       email,
-      role: 'RECEIVING_WORKER',
+      role: 'WORKER',
       facilityId: 'fac-2',
     };
   }

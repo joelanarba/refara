@@ -64,7 +64,7 @@ router.use(authenticateJWT);
  */
 router.post(
   '/',
-  authorizeRoles(UserRole.REFERRING_WORKER, UserRole.ADMIN),
+  authorizeRoles(UserRole.WORKER, UserRole.ADMIN),
   validateBody(createReferralSchema),
   createReferral,
 );
@@ -84,7 +84,7 @@ router.post(
  */
 router.get(
   '/outgoing',
-  authorizeRoles(UserRole.REFERRING_WORKER, UserRole.ADMIN),
+  authorizeRoles(UserRole.WORKER, UserRole.ADMIN),
   getOutgoingReferrals,
 );
 
@@ -103,7 +103,7 @@ router.get(
  */
 router.get(
   '/incoming',
-  authorizeRoles(UserRole.RECEIVING_WORKER, UserRole.ADMIN),
+  authorizeRoles(UserRole.WORKER, UserRole.ADMIN),
   getIncomingReferrals,
 );
 

@@ -3,8 +3,8 @@ import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const DEMO_ACCOUNTS = [
-  { label: 'Referring Worker', email: 'referrer@demo.maternalink.org', role: 'REFERRING_WORKER' },
-  { label: 'Receiving Worker', email: 'receiver@demo.maternalink.org', role: 'RECEIVING_WORKER' },
+  { label: 'Referring Worker', email: 'referrer@demo.maternalink.org', role: 'WORKER' },
+  { label: 'Receiving Worker', email: 'receiver@demo.maternalink.org', role: 'WORKER' },
   { label: 'Administrator', email: 'admin@demo.maternalink.org', role: 'ADMIN' },
 ];
 

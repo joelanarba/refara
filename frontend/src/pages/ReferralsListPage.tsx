@@ -15,7 +15,7 @@ export default function ReferralsListPage() {
 
   const isAdmin = user?.role === 'ADMIN';
   const scope = isAdmin ? 'network' : 'facility';
-  const canCreate = user?.role === 'REFERRING_WORKER';
+  const canCreate = user?.role === 'WORKER';
 
   const { data, loading } = useReferrals(scope, direction);
 

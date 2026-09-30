@@ -24,8 +24,7 @@ enum ReferralUrgency {
 }
 
 enum UserRole {
-  REFERRING_WORKER
-  RECEIVING_WORKER
+  WORKER
   ADMIN
 }
 
