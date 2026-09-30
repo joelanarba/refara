@@ -30,7 +30,6 @@ const MOCK_USERS: UserSummary[] = [
 
 const ROLE_DISPLAY: Record<UserRole, string> = {
   WORKER: 'Healthcare Worker',
-  WORKER: 'Healthcare Worker',
   ADMIN: 'System Administrator',
 };
 
