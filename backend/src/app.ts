@@ -10,6 +10,7 @@ import { authRoutes } from './modules/auth';
 import { referralRoutes } from './modules/referrals';
 import { facilityRoutes } from './modules/facilities';
 import { userRoutes } from './modules/users';
+import { dashboardRoutes } from './modules/dashboard';
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use('/api/v1/auth', authRoutes);
 app.use('/api/v1/referrals', referralRoutes);
 app.use('/api/v1/facilities', facilityRoutes);
 app.use('/api/v1/users', userRoutes);
+app.use('/api/v1/dashboard', dashboardRoutes);
 
 // Catch Unmatched 404 Routes
 app.use((_req: Request, _res: Response, next: NextFunction) => {
