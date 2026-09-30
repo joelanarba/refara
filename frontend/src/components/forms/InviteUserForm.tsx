@@ -19,9 +19,14 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
   const [facilityId, setFacilityId] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [showSuccess, setShowSuccess] = useState(false);
   
   const [facilities, setFacilities] = useState<FacilitySummary[]>([]);
   const [isLoadingFacilities, setIsLoadingFacilities] = useState(true);
+
+  const copyToClipboard = () => {
+    navigator.clipboard.writeText(`Email: ${email}\nPassword: Refara2026!`);
+  };
 
   useEffect(() => {
     getFacilities()
@@ -64,13 +69,49 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
 
     try {
       await createUser({ name, email, role, facilityId });
-      onSuccess?.();
+      setShowSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Failed to create user. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
   };
+
+  if (showSuccess) {
+    return (
+      <div className="w-full max-w-[450px] rounded-2xl border border-slate-100 bg-white p-6 shadow-xl sm:p-7 text-slate-800 text-center">
+        <div className="mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-emerald-50 text-emerald-500">
+          <UserPlus className="h-7 w-7" />
+        </div>
+        <h2 className="mb-2 text-xl font-bold text-slate-900">User created successfully!</h2>
+        <p className="mb-6 text-sm text-slate-500">
+          Since this is an MVP without an email service, please share these credentials directly with {name}.
+        </p>
+        <div className="mb-6 rounded-xl bg-slate-50 p-4 text-left border border-slate-100 relative">
+          <div className="mb-2">
+            <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Email</span>
+            <span className="text-sm font-medium text-slate-800">{email}</span>
+          </div>
+          <div>
+            <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Temporary Password</span>
+            <span className="text-sm font-mono text-slate-800 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">Refara2026!</span>
+          </div>
+          <button 
+            onClick={copyToClipboard}
+            className="absolute top-4 right-4 text-slate-400 hover:text-[#86b3b5] transition flex items-center gap-1 text-xs font-medium bg-white px-2 py-1 rounded-md border border-slate-200 shadow-sm"
+          >
+            Copy
+          </button>
+        </div>
+        <button
+          onClick={onSuccess}
+          className="w-full rounded-xl bg-[#86b3b5] px-5 py-3 text-sm font-medium text-white shadow-sm transition hover:bg-[#729fa1] active:bg-[#638e90]"
+        >
+          Done
+        </button>
+      </div>
+    );
+  }
 
   return (
     <form
