@@ -63,6 +63,7 @@ model User {
   facility      Facility?               @relation(fields: [facilityId], references: [id])
   createdAt     DateTime                @default(now())
   updatedAt     DateTime                @updatedAt
+  lastLoginAt   DateTime?
 
   createdReferrals Referral[]           @relation("ReferralCreator")
   statusAudits     ReferralStatusHistory[]

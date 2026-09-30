@@ -8,23 +8,29 @@ const MOCK_USERS: UserSummary[] = [
   {
     id: 'u-1',
     name: 'Ama Mensah',
+    email: 'ama@example.com',
     role: 'WORKER',
     facilityName: 'Adabraka Community Clinic',
     isActive: true,
+    isPending: false,
   },
   {
     id: 'u-2',
     name: 'Dr. Kojo Asare',
+    email: 'kojo@example.com',
     role: 'WORKER',
     facilityName: 'Korle Bu Teaching Hospital',
     isActive: true,
+    isPending: false,
   },
   {
     id: 'u-3',
     name: 'Nana Owusu',
+    email: 'nana@example.com',
     role: 'ADMIN',
     facilityName: 'Central Health Network',
     isActive: true,
+    isPending: true,
   },
 ];
 

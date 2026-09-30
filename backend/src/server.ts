@@ -13,6 +13,11 @@ const start = async () => {
       console.log('Added WORKER to UserRole');
     } catch(e) {}
 
+    try {
+      await prisma.$executeRawUnsafe(`ALTER TABLE "users" ADD COLUMN "lastLoginAt" TIMESTAMP(3);`);
+      console.log('Added lastLoginAt to users table');
+    } catch(e) {}
+
     const server = app.listen(config.port, () => {
       console.log(`Server running on port ${config.port} in ${config.nodeEnv} mode`);
       console.log(`Health check available at: http://localhost:${config.port}/api/v1/health`);

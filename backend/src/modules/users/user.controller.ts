@@ -17,6 +17,7 @@ export const getUsers = asyncHandler(async (req: Request, res: Response) => {
     role: u.role,
     facilityName: u.facility?.name || 'System Admin',
     isActive: true, // Always active for MVP
+    isPending: !u.lastLoginAt,
   }));
 
   res.status(200).json({ data });

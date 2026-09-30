@@ -65,6 +65,12 @@ export const loginUser = async (req: Request, res: Response) => {
       return res.status(401).json({ error: { message: 'Invalid email or password', status: 401 } });
     }
 
+    // Update lastLoginAt
+    await prisma.user.update({
+      where: { id: user.id },
+      data: { lastLoginAt: new Date() }
+    });
+
     const payload = {
       userId: user.id,
       role: user.role,
