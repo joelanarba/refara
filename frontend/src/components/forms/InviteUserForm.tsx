@@ -19,7 +19,7 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
   const [facilityId, setFacilityId] = useState('');
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
-  
+
   const [facilities, setFacilities] = useState<FacilitySummary[]>([]);
   const [isLoadingFacilities, setIsLoadingFacilities] = useState(true);
 
@@ -66,9 +66,7 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
       await createUser({ name, email, role, facilityId });
       onSuccess?.();
     } catch (err: unknown) {
-      setError(
-        (err instanceof Error && err.message) || 'Failed to create user. Please try again.',
-      );
+      setError((err instanceof Error && err.message) || 'Failed to create user. Please try again.');
     } finally {
       setIsSubmitting(false);
     }
@@ -78,7 +76,8 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
     'h-[41px] w-full rounded-xl border border-[#e2e4e3] bg-[#fbfdfc] px-[13px] text-[12px] leading-4 font-[600] tracking-[-0.2px] text-[#1b2a32] outline-none transition placeholder:text-[#939aa0] focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15';
   const selectClass =
     'h-[41px] w-full cursor-pointer appearance-none rounded-xl border border-[#e2e4e3] bg-[#fbfdfc] pl-4 pr-9 text-[11.5px] font-[700] tracking-[-0.1px] text-[#37403f] outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15';
-  const labelClass = 'mb-2 block text-[11.5px] font-[600] leading-4 tracking-[-0.1px] text-[#5a6667]';
+  const labelClass =
+    'mb-2 block text-[11.5px] font-[600] leading-4 tracking-[-0.1px] text-[#5a6667]';
 
   return (
     <form
