@@ -1,7 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@500;600;700;800&display=swap');
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
+/* Tailwind v4, scoped to the Invite User feature: no preflight, and utilities are intentionally
+   unlayered so they beat the global `button, input, select { font: inherit }` rule below (v3 behaviour). */
+@import 'tailwindcss/theme.css' layer(theme);
+@import 'tailwindcss/utilities.css' source(none);
+@source './components/forms/InviteUserForm.tsx';
+@source './pages/UsersPage.tsx';
 
 :root {
   font-family: 'DM Sans', sans-serif;
