@@ -16,7 +16,11 @@ export default function FacilitiesPage() {
         title="Facilities"
         subtitle="Manage connected care facilities across the network."
         action={
-          <button type="button" className="primary-button" onClick={() => setIsAddModalOpen(true)}>
+          <button
+            type="button"
+            className="inline-flex items-center gap-2 rounded-xl bg-[#3e8995] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#327581] active:bg-[#2d6d78] focus:outline-none focus:ring-4 focus:ring-[#3e8995]/20"
+            onClick={() => setIsAddModalOpen(true)}
+          >
             <PlusIcon />
             Add facility
           </button>
@@ -26,7 +30,7 @@ export default function FacilitiesPage() {
       {loading && <p style={{ color: '#9aa8aa', fontSize: 12 }}>Loading...</p>}
 
       {!loading && (
-        <div className="facility-grid">
+        <div className="mt-8 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
           {facilities?.map((f) => (
             <FacilityCard key={f.id} facility={f} />
           ))}
