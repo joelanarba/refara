@@ -113,11 +113,11 @@ export default function Navbar({ onMenuClick }: NavbarProps) {
                 </div>
 
                 {/* Facility chip */}
-                {user.facilityName && (
+                {user.facility?.name && (
                   <div className="px-[18px] pb-3.5">
                     <div className="flex items-center gap-2 rounded-lg bg-[#eff7f7] px-3 py-2.5 text-[13px] font-medium text-[#3f7f8a]">
                       <PinIcon />
-                      <span className="truncate">{user.facilityName}</span>
+                      <span className="truncate">{user.facility?.name}</span>
                     </div>
                   </div>
                 )}
@@ -201,35 +201,4 @@ function SignOutIcon() {
   );
 }
 
-function UserIcon() {
-  return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      <circle cx="12" cy="8" r="4" />
-      <path d="M4 21v-1a6 6 0 0 1 6-6h4a6 6 0 0 1 6 6v1" />
-    </svg>
-  );
-}
 
-function ChevronRightIcon() {
-  return (
-    <svg
-      width="14"
-      height="14"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
-      <path d="M9 18l6-6-6-6" />
-    </svg>
-  );
-}

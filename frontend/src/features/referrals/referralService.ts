@@ -97,6 +97,20 @@ function filterByDirection(items: ReferralListItem[], direction: ReferralDirecti
   );
 }
 
+function toDetail(record: ReferralListItem): ReferralDetail {
+  return {
+    ...record,
+    gestationalWeeks: 38,
+    referringFacilityId: 'mock-1',
+    receivingFacilityId: 'mock-2',
+    createdByUserId: 'mock-u1',
+    referringFacility: { id: 'mock-1', name: record.referringFacilityName, type: 'CHPS_COMPOUND' },
+    receivingFacility: { id: 'mock-2', name: record.receivingFacilityName, type: 'DISTRICT_HOSPITAL' },
+    createdByUser: { id: 'mock-u1', name: 'Mock User', email: 'mock@example.com' },
+    statusHistory: [],
+  };
+}
+
 export async function getReferrals(
   scope: ReferralScope,
   direction: ReferralDirection = 'all',

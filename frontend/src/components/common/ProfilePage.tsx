@@ -53,10 +53,10 @@ export default function ProfilePage() {
           </div>
         </div>
 
-        {user.facilityName && (
+        {user.facility?.name && (
           <div className="mt-4 inline-flex items-center gap-2 rounded-lg bg-[#eff7f7] px-3 py-2 text-[13px] font-medium text-[#3f7f8a]">
             <PinIcon />
-            {user.facilityName}
+            {user.facility?.name}
           </div>
         )}
       </div>

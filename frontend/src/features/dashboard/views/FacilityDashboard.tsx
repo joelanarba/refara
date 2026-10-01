@@ -4,7 +4,6 @@ import DashboardHeader from '../components/DashboardHeader';
 import WelcomeBanner from '../components/WelcomeBanner';
 import StatsRow from '../components/StatsRow';
 import RecentReferralsPanel from '../components/RecentReferralsPanel';
-import ReferralActivityChart from '../components/ReferralActivityChart';
 import { useAuth } from '@/features/auth/useAuth';
 import { useDashboardData } from '@/hooks/useDashboardData';
 
@@ -17,7 +16,7 @@ function greeting() {
 
 export default function FacilityDashboard() {
   const { user } = useAuth();
-  const { stats, referrals, activity } = useDashboardData('facility');
+  const { stats, referrals } = useDashboardData('facility');
 
   const firstName = user?.name.split(' ')[0] ?? '';
   const canCreate = user?.role === 'WORKER';
