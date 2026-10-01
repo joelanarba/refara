@@ -10,34 +10,49 @@ export default function ReferralDetailPage() {
 
   if (loading) {
     return (
-      <div className="page-container">
-        <p>Loading referral details...</p>
+      <div className="mx-auto w-full max-w-[1100px] p-6 sm:p-8">
+        <p className="text-sm text-[#8c9d9f]">Loading referral details...</p>
       </div>
     );
   }
 
   if (error || !data) {
     return (
-      <div className="page-container">
-        <div className="form-error">
-          <p>{error || 'Referral not found.'}</p>
+      <div className="mx-auto w-full max-w-[1100px] p-6 sm:p-8">
+        <div
+          role="alert"
+          className="rounded-lg border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-600"
+        >
+          {error || 'Referral not found.'}
         </div>
-        <button className="secondary-button mt-4" onClick={() => navigate(ROUTES.REFERRALS)}>
-          &larr; Back to Referrals
+
+        <button
+          type="button"
+          onClick={() => navigate(ROUTES.REFERRALS)}
+          className="mt-4 inline-flex items-center gap-1.5 rounded-lg border border-[#e0e9e9] bg-white px-4 py-2.5 text-sm font-semibold text-[#718285] transition hover:border-[#a7ccce] hover:text-[#3e8995] focus:outline-none focus:ring-2 focus:ring-[#86b3b5]/30"
+        >
+          ← Back to Referrals
         </button>
       </div>
     );
   }
 
   return (
-    <div className="page-container">
-      <div className="page-header" style={{ marginBottom: '2rem', display: 'flex', gap: '1rem', alignItems: 'center' }}>
-        <button className="secondary-button" onClick={() => navigate(ROUTES.REFERRALS)}>
-          &larr; Back
+    <div className="mx-auto w-full max-w-[1100px] p-6 sm:p-8">
+      <div className="mb-8 flex items-center gap-4">
+        <button
+          type="button"
+          onClick={() => navigate(ROUTES.REFERRALS)}
+          className="inline-flex items-center gap-1.5 rounded-lg border border-[#e0e9e9] bg-white px-4 py-2.5 text-sm font-semibold text-[#718285] transition hover:border-[#a7ccce] hover:text-[#3e8995] focus:outline-none focus:ring-2 focus:ring-[#86b3b5]/30"
+        >
+          ← Back
         </button>
-        <h1 className="page-title">Referral {data.code}</h1>
+
+        <h1 className="font-display text-[26px] font-bold tracking-tight text-[#253b42]">
+          Referral {data.code}
+        </h1>
       </div>
-      
+
       <ReferralDetailView referral={data} onUpdateStatus={updateStatus} />
     </div>
   );

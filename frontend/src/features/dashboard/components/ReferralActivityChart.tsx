@@ -34,34 +34,38 @@ export default function ReferralActivityChart({
   const dayLabels = points.filter((_, i) => i % 2 === 0 || i === points.length - 1);
 
   return (
-    <div className="panel activity-panel">
-      <div className="panel-head">
+    <div className="min-w-0 rounded-[13px] border border-[#e8eeee] bg-white">
+      <div className="flex items-start justify-between gap-[15px] px-6 pt-[23px] pb-[18px]">
         <div>
-          <h2>Referral activity</h2>
-          <p>Last 7 days</p>
+          <h2 className="font-display text-[17px] font-bold text-[#2d444a]">Referral activity</h2>
+          <p className="mt-[5px] text-sm text-[#9aa8aa]">Last 7 days</p>
         </div>
-        <button type="button" className="row-more" aria-label="More options">
+        <button type="button" className="text-[#9aabad]" aria-label="More options">
           <MoreIcon />
         </button>
       </div>
 
       {loading ? (
-        <div style={{ padding: '20px 24px', color: '#9aa8aa', fontSize: 11 }}>Loading…</div>
+        <div className="px-6 py-5 text-sm text-[#9aa8aa]">Loading…</div>
       ) : (
         <>
-          <div className="chart">
-            <div className="chart-labels">
+          <div className="flex h-[190px] px-6 pt-4">
+            <div className="flex flex-col justify-between pb-6 text-xs text-[#a2afb1]">
               {yLabels.map((v, i) => (
                 <span key={i}>{v}</span>
               ))}
             </div>
-            <div className="chart-area">
-              <div className="chart-lines">
+            <div className="relative ml-[9px] flex-1">
+              <div className="absolute inset-x-0 top-0.5 bottom-6 flex flex-col justify-between">
                 {yLabels.map((_, i) => (
-                  <i key={i} />
+                  <i key={i} className="block border-t border-dashed border-[#e8eeee]" />
                 ))}
               </div>
-              <svg viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`} preserveAspectRatio="none">
+              <svg
+                className="absolute inset-x-0 top-0.5 h-[calc(100%-24px)] w-full"
+                viewBox={`0 0 ${CHART_WIDTH} ${CHART_HEIGHT}`}
+                preserveAspectRatio="none"
+              >
                 <path
                   d={buildPath(points)}
                   fill="none"
@@ -71,7 +75,7 @@ export default function ReferralActivityChart({
                   strokeLinejoin="round"
                 />
               </svg>
-              <div className="chart-days">
+              <div className="absolute inset-x-0 bottom-0 flex justify-between text-[11px] text-[#a2afb1]">
                 {dayLabels.map((p, i) => (
                   <span key={i}>
                     {new Date(p.date).toLocaleDateString('en-GB', {
@@ -84,18 +88,18 @@ export default function ReferralActivityChart({
             </div>
           </div>
 
-          <div className="chart-legend">
+          <div className="flex items-center justify-between border-t border-[#eff3f3] px-6 pt-3.5 pb-[17px] text-sm text-[#829396]">
             <span>
-              <span className="legend-dot" />
+              <span className="mr-1.5 inline-block size-1.5 rounded-full bg-[#4a97a2]" />
               Referrals submitted
             </span>
             {changePct !== null && (
               <span>
-                <strong>
+                <strong className="text-sm text-[#5aa078]">
                   {changePct > 0 ? '+' : ''}
                   {changePct}%
                 </strong>{' '}
-                <small>vs last week</small>
+                <small className="font-normal text-[#a1adae]">vs last week</small>
               </span>
             )}
           </div>

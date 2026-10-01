@@ -5,15 +5,15 @@ interface WelcomeBannerProps {
 
 export default function WelcomeBanner({ title, text }: WelcomeBannerProps) {
   return (
-    <div className="welcome-banner">
-      <span className="banner-icon">
+    <div className="relative mb-[21px] flex min-h-[112px] items-center gap-[17px] overflow-hidden rounded-[14px] bg-[linear-gradient(104deg,#3d8792,#5a9fa3)] p-[18px] text-white shadow-[0_12px_25px_rgba(55,123,132,0.12)] min-[431px]:px-[29px] min-[431px]:py-[23px]">
+      <span className="grid size-[43px] shrink-0 place-items-center rounded-xl bg-white/15 text-[#dff3f1]">
         <HeartIcon size={20} />
       </span>
       <div>
-        <strong>{title}</strong>
-        <p>{text}</p>
+        <strong className="font-display text-lg">{title}</strong>
+        <p className="mt-1.5 mb-0 text-[15px] text-[#d5eded]">{text}</p>
       </div>
-      <span className="banner-mark">
+      <span className="absolute top-7 -right-[5px] -rotate-[20deg] text-white/10 min-[431px]:right-[37px]">
         <HeartIcon size={64} />
       </span>
     </div>

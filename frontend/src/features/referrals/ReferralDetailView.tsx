@@ -24,7 +24,10 @@ export default function ReferralDetailView({ referral, onUpdateStatus }: Props) 
     setError('');
     setIsUpdating(true);
     try {
-      await onUpdateStatus({ newStatus, reasonText: requiresReason ? reason : undefined });
+      await onUpdateStatus({
+        newStatus,
+        reasonText: requiresReason ? reason : undefined,
+      });
       setShowRejectForm(false);
       setShowCancelForm(false);
       setReason('');
@@ -39,122 +42,134 @@ export default function ReferralDetailView({ referral, onUpdateStatus }: Props) 
   const isOutgoing = referral.referringFacilityId === user?.facilityId;
   const isAdmin = user?.role === 'ADMIN';
 
-  const canCancel = (isOutgoing || isAdmin) && ['SUBMITTED', 'ACKNOWLEDGED'].includes(referral.status);
+  const canCancel =
+    (isOutgoing || isAdmin) && ['SUBMITTED', 'ACKNOWLEDGED'].includes(referral.status);
   const canAcknowledge = (isIncoming || isAdmin) && referral.status === 'SUBMITTED';
-  const canAcceptOrReject = (isIncoming || isAdmin) && ['SUBMITTED', 'ACKNOWLEDGED'].includes(referral.status);
+  const canAcceptOrReject =
+    (isIncoming || isAdmin) && ['SUBMITTED', 'ACKNOWLEDGED'].includes(referral.status);
   const canArrive = (isIncoming || isAdmin) && referral.status === 'ACCEPTED';
   const canComplete = (isIncoming || isAdmin) && referral.status === 'ARRIVED';
 
   return (
-    <div className="referral-detail-view" style={{ display: 'flex', gap: '2rem', flexWrap: 'wrap' }}>
-      <div className="main-panel" style={{ flex: '1 1 60%', minWidth: '300px' }}>
-        <div className="form-panel">
-          <h2>Referral Information</h2>
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
+    <div className="flex flex-wrap gap-8">
+      <div className="min-w-[300px] flex-[1_1_60%]">
+        <div className="rounded-[13px] border border-[#e8eeee] bg-white p-7">
+          <h2 className="font-display text-[17px] font-bold text-[#2d444a]">
+            Referral Information
+          </h2>
+
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2">
+            <InfoItem label="Patient Name" value={referral.patientName} strong />
+            <InfoItem label="Code" value={referral.code} strong />
+            <InfoItem label="Age" value={String(referral.patientAge)} />
+            <InfoItem
+              label="Gestational Weeks"
+              value={String(referral.gestationalWeeks || 'N/A')}
+            />
             <div>
-              <p className="text-sm text-gray">Patient Name</p>
-              <p className="font-semibold">{referral.patientName}</p>
+              <p className="text-sm text-[#8c9d9f]">Urgency</p>
+              <StatusBadge type="urgency" value={referral.urgency} />
             </div>
             <div>
-              <p className="text-sm text-gray">Code</p>
-              <p className="font-semibold">{referral.code}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray">Age</p>
-              <p>{referral.patientAge}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray">Gestational Weeks</p>
-              <p>{referral.gestationalWeeks || 'N/A'}</p>
-            </div>
-            <div>
-              <p className="text-sm text-gray">Urgency</p>
-              <span className={`badge badge-${referral.urgency.toLowerCase()}`}>
-                {referral.urgency}
-              </span>
-            </div>
-            <div>
-              <p className="text-sm text-gray">Current Status</p>
-              <span className={`badge badge-${referral.status.toLowerCase()}`}>
-                {referral.status.replace('_', ' ')}
-              </span>
+              <p className="text-sm text-[#8c9d9f]">Current Status</p>
+              <StatusBadge type="status" value={referral.status} />
             </div>
           </div>
 
-          <div style={{ marginTop: '1.5rem' }}>
-            <p className="text-sm text-gray">Reason for Referral</p>
-            <p style={{ background: '#f8f9fa', padding: '1rem', borderRadius: '4px', marginTop: '0.5rem' }}>
+          <div className="mt-6">
+            <p className="text-sm text-[#8c9d9f]">Reason for Referral</p>
+            <p className="mt-2 rounded-lg bg-[#f8fafa] p-4 text-sm leading-6 text-[#425d62]">
               {referral.reason}
             </p>
           </div>
 
-          <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1.5rem' }}>
+          <div className="mt-6 grid grid-cols-1 gap-4 sm:grid-cols-2">
             <div>
-              <p className="text-sm text-gray">From (Origin)</p>
-              <p className="font-semibold">{referral.referringFacility.name}</p>
-              <p className="text-xs">{referral.referringFacility.type.replace('_', ' ')}</p>
-              <p className="text-xs text-gray mt-1">Requested by: {referral.createdByUser.name}</p>
+              <p className="text-sm text-[#8c9d9f]">From (Origin)</p>
+              <p className="mt-1 font-semibold text-[#294148]">{referral.referringFacility.name}</p>
+              <p className="text-xs text-[#60797d]">
+                {referral.referringFacility.type.replace('_', ' ')}
+              </p>
+              <p className="mt-1 text-xs text-[#8c9d9f]">
+                Requested by: {referral.createdByUser.name}
+              </p>
             </div>
             <div>
-              <p className="text-sm text-gray">To (Destination)</p>
-              <p className="font-semibold">{referral.receivingFacility.name}</p>
-              <p className="text-xs">{referral.receivingFacility.type.replace('_', ' ')}</p>
+              <p className="text-sm text-[#8c9d9f]">To (Destination)</p>
+              <p className="mt-1 font-semibold text-[#294148]">{referral.receivingFacility.name}</p>
+              <p className="text-xs text-[#60797d]">
+                {referral.receivingFacility.type.replace('_', ' ')}
+              </p>
             </div>
           </div>
         </div>
 
-        {error && <div className="form-error mt-4">{error}</div>}
+        {error && (
+          <div
+            role="alert"
+            className="mt-4 rounded-lg border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-600"
+          >
+            {error}
+          </div>
+        )}
 
-        <div className="action-panel mt-4" style={{ display: 'flex', gap: '1rem', flexWrap: 'wrap' }}>
+        <div className="mt-4 flex flex-wrap gap-3">
           {canAcknowledge && (
-            <button className="primary-button" onClick={() => handleAction('ACKNOWLEDGED')} disabled={isUpdating}>
+            <PrimaryButton onClick={() => handleAction('ACKNOWLEDGED')} disabled={isUpdating}>
               Acknowledge Receipt
-            </button>
+            </PrimaryButton>
           )}
 
           {canAcceptOrReject && !showRejectForm && (
             <>
-              <button className="primary-button" onClick={() => handleAction('ACCEPTED')} disabled={isUpdating}>
+              <PrimaryButton onClick={() => handleAction('ACCEPTED')} disabled={isUpdating}>
                 Accept Patient
-              </button>
-              <button className="secondary-button" onClick={() => setShowRejectForm(true)} disabled={isUpdating}>
+              </PrimaryButton>
+              <SecondaryButton onClick={() => setShowRejectForm(true)} disabled={isUpdating}>
                 Reject...
-              </button>
+              </SecondaryButton>
             </>
           )}
 
           {canArrive && (
-            <button className="primary-button" onClick={() => handleAction('ARRIVED')} disabled={isUpdating}>
+            <PrimaryButton onClick={() => handleAction('ARRIVED')} disabled={isUpdating}>
               Mark as Arrived
-            </button>
+            </PrimaryButton>
           )}
 
           {canComplete && (
-            <button className="primary-button" onClick={() => handleAction('COMPLETED')} disabled={isUpdating}>
+            <PrimaryButton onClick={() => handleAction('COMPLETED')} disabled={isUpdating}>
               Mark as Completed
-            </button>
+            </PrimaryButton>
           )}
 
           {canCancel && !showCancelForm && (
-            <button className="secondary-button" onClick={() => setShowCancelForm(true)} disabled={isUpdating} style={{ marginLeft: 'auto' }}>
+            <SecondaryButton
+              onClick={() => setShowCancelForm(true)}
+              disabled={isUpdating}
+              className="ml-auto"
+            >
               Cancel Referral
-            </button>
+            </SecondaryButton>
           )}
         </div>
 
         {(showRejectForm || showCancelForm) && (
-          <div className="form-panel mt-4">
-            <h3>{showRejectForm ? 'Reject Referral' : 'Cancel Referral'}</h3>
+          <div className="mt-4 rounded-[13px] border border-[#e8eeee] bg-white p-7">
+            <h3 className="font-display text-lg font-bold text-[#2d444a]">
+              {showRejectForm ? 'Reject Referral' : 'Cancel Referral'}
+            </h3>
+
             <textarea
               rows={3}
               placeholder="Please provide a reason..."
               value={reason}
               onChange={(e) => setReason(e.target.value)}
-              className="full-field mt-2"
+              className="mt-3 w-full resize-y rounded-lg border border-[#dce6e6] bg-[#fbfdfd] px-3 py-2.5 text-sm text-[#3d5559] outline-none transition placeholder:text-[#9aa8aa] focus:border-[#78b5ba] focus:ring-4 focus:ring-[#eaf5f5]"
             />
-            <div style={{ display: 'flex', gap: '1rem', marginTop: '1rem' }}>
-              <button
-                className="secondary-button"
+
+            <div className="mt-4 flex gap-3">
+              <SecondaryButton
                 onClick={() => {
                   setShowRejectForm(false);
                   setShowCancelForm(false);
@@ -163,32 +178,33 @@ export default function ReferralDetailView({ referral, onUpdateStatus }: Props) 
                 }}
               >
                 Go Back
-              </button>
-              <button
-                className="primary-button"
+              </SecondaryButton>
+              <PrimaryButton
                 onClick={() => handleAction(showRejectForm ? 'REJECTED' : 'CANCELLED', true)}
                 disabled={isUpdating}
               >
                 Confirm {showRejectForm ? 'Rejection' : 'Cancellation'}
-              </button>
+              </PrimaryButton>
             </div>
           </div>
         )}
       </div>
 
-      <div className="side-panel" style={{ flex: '1 1 30%', minWidth: '250px' }}>
-        <div className="form-panel">
-          <h2>Timeline</h2>
-          <div className="timeline" style={{ marginTop: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+      <div className="min-w-[250px] flex-[1_1_30%]">
+        <div className="rounded-[13px] border border-[#e8eeee] bg-white p-7">
+          <h2 className="font-display text-[17px] font-bold text-[#2d444a]">Timeline</h2>
+          <div className="mt-6 flex flex-col gap-4">
             {referral.statusHistory.map((history) => (
-              <div key={history.id} className="timeline-event" style={{ borderLeft: '2px solid #e2e8f0', paddingLeft: '1rem' }}>
-                <p className="text-sm font-semibold">{history.newStatus.replace('_', ' ')}</p>
-                <p className="text-xs text-gray">{new Date(history.timestamp).toLocaleString()}</p>
-                <p className="text-xs mt-1">By {history.changedByUser.name}</p>
+              <div key={history.id} className="border-l-2 border-[#e2e8f0] pl-4">
+                <p className="text-sm font-semibold text-[#425d62]">
+                  {history.newStatus.replace('_', ' ')}
+                </p>
+                <p className="text-xs text-[#8c9d9f]">
+                  {new Date(history.timestamp).toLocaleString()}
+                </p>
+                <p className="mt-1 text-xs text-[#60797d]">By {history.changedByUser.name}</p>
                 {history.reasonText && (
-                  <p className="text-xs mt-1" style={{ fontStyle: 'italic', color: '#64748b' }}>
-                    "{history.reasonText}"
-                  </p>
+                  <p className="mt-1 text-xs italic text-[#64748b]">"{history.reasonText}"</p>
                 )}
               </div>
             ))}
@@ -196,5 +212,110 @@ export default function ReferralDetailView({ referral, onUpdateStatus }: Props) 
         </div>
       </div>
     </div>
+  );
+}
+
+/* ---------- Helpers ---------- */
+
+function InfoItem({
+  label,
+  value,
+  strong = false,
+}: {
+  label: string;
+  value: string;
+  strong?: boolean;
+}) {
+  return (
+    <div>
+      <p className="text-sm text-[#8c9d9f]">{label}</p>
+      <p className={strong ? 'font-semibold text-[#294148]' : 'text-[#425d62]'}>{value}</p>
+    </div>
+  );
+}
+
+function StatusBadge({ type, value }: { type: 'urgency' | 'status'; value: string }) {
+  if (type === 'urgency') {
+    const styles: Record<string, string> = {
+      ROUTINE: 'bg-[#e9f4eb] text-[#5c8b76]',
+      URGENT: 'bg-[#fff0dd] text-[#bd8250]',
+      EMERGENCY: 'bg-[#fde7e2] text-[#bd6255]',
+    };
+    return (
+      <span
+        className={`mt-1 inline-flex w-fit rounded-md px-2 py-1 text-xs font-bold ${
+          styles[value] || 'bg-slate-100 text-slate-600'
+        }`}
+      >
+        {value}
+      </span>
+    );
+  }
+
+  const styles: Record<string, string> = {
+    SUBMITTED: 'bg-[#fff0e9] text-[#bd7655]',
+    ACKNOWLEDGED: 'bg-[#fff5e4] text-[#ba8c4e]',
+    ACCEPTED: 'bg-[#e8f4f5] text-[#568a9a]',
+    ARRIVED: 'bg-[#eaf5eb] text-[#638b71]',
+    COMPLETED: 'bg-[#eaf5eb] text-[#598a6f]',
+    REJECTED: 'bg-[#fde7e2] text-[#bd6255]',
+    CANCELLED: 'bg-slate-100 text-slate-600',
+  };
+
+  return (
+    <span
+      className={`mt-1 inline-flex w-fit items-center gap-1.5 rounded-md px-2 py-1 text-xs font-bold ${
+        styles[value] || 'bg-slate-100 text-slate-600'
+      }`}
+    >
+      <i className="h-1.5 w-1.5 rounded-full bg-current" />
+      {value.replace('_', ' ')}
+    </span>
+  );
+}
+
+function PrimaryButton({
+  children,
+  onClick,
+  disabled,
+  className = '',
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`rounded-lg bg-[#3e8995] px-4 py-2.5 text-sm font-bold text-white shadow-sm transition hover:bg-[#327581] focus:outline-none focus:ring-4 focus:ring-[#3e8995]/20 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+    >
+      {children}
+    </button>
+  );
+}
+
+function SecondaryButton({
+  children,
+  onClick,
+  disabled,
+  className = '',
+}: {
+  children: React.ReactNode;
+  onClick?: () => void;
+  disabled?: boolean;
+  className?: string;
+}) {
+  return (
+    <button
+      type="button"
+      onClick={onClick}
+      disabled={disabled}
+      className={`rounded-lg border border-[#e0e9e9] bg-white px-4 py-2.5 text-sm font-semibold text-[#718285] transition hover:border-[#a7ccce] hover:text-[#3e8995] focus:outline-none focus:ring-2 focus:ring-[#86b3b5]/30 disabled:cursor-not-allowed disabled:opacity-50 ${className}`}
+    >
+      {children}
+    </button>
   );
 }

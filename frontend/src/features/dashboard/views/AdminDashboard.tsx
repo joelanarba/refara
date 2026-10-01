@@ -2,11 +2,10 @@ import DashboardHeader from '../components/DashboardHeader';
 import WelcomeBanner from '../components/WelcomeBanner';
 import StatsRow from '../components/StatsRow';
 import RecentReferralsPanel from '../components/RecentReferralsPanel';
-import ReferralActivityChart from '../components/ReferralActivityChart';
 import { useDashboardData } from '@/hooks/useDashboardData';
 
 export default function AdminDashboard() {
-  const { stats, referrals, activity } = useDashboardData('network');
+  const { stats, referrals } = useDashboardData('network');
 
   return (
     <>
@@ -26,11 +25,11 @@ export default function AdminDashboard() {
           referrals={referrals.data ?? []}
           loading={referrals.loading}
         />
-        <ReferralActivityChart
+        {/* <ReferralActivityChart
           points={activity.data?.points ?? []}
           changePct={activity.data?.changePct ?? null}
           loading={activity.loading}
-        />
+        /> */}
       </div>
     </>
   );

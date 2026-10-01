@@ -22,6 +22,11 @@ export interface User {
   email: string;
   role: UserRole;
   facilityId: string | null;
+  facility?: {
+    id: string;
+    name: string;
+    type: FacilityType;
+  } | null;
   createdAt: string;
 }
 

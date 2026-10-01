@@ -10,4 +10,5 @@ export const ROUTES = {
   REFERRAL_DETAIL: '/referrals/:id',
   FACILITIES: '/facilities',
   USERS: '/users',
+  PROFILE: '/profile',
 } as const;
