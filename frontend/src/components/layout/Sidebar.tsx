@@ -1,5 +1,5 @@
 import { ReactNode } from 'react';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { ROLE_LABELS } from '../../constants/roles';
 import { ROUTES } from '../../constants/routes';
 import { useAuth } from '@/features/auth/useAuth';
@@ -28,6 +28,7 @@ function initials(name: string) {
 
 export default function Sidebar({ open, pendingReferralsCount }: SidebarProps) {
   const { user, logout } = useAuth();
+  const navigate = useNavigate();
 
   const NAV_ITEMS: NavItem[] = [
     { to: ROUTES.DASHBOARD, label: 'Overview', icon: <GridIcon /> },
@@ -56,7 +57,7 @@ export default function Sidebar({ open, pendingReferralsCount }: SidebarProps) {
         <span className="grid size-[34px] place-items-center rounded-[11px] bg-[#3f8995] text-white shadow-[0_5px_14px_rgba(63,137,149,0.24)]">
           <HeartIcon />
         </span>
-        <span>Refera</span>
+        <span>Refara</span>
       </div>
 
       <p className="mx-3 mt-12 mb-3 text-sm leading-tight font-bold tracking-[1.5px] text-[#91a3a6]">
@@ -66,7 +67,8 @@ export default function Sidebar({ open, pendingReferralsCount }: SidebarProps) {
       {user && (
         <button
           type="button"
-          className="mb-[30px] flex w-full items-center gap-2.5 rounded-xl border border-[#edf1f1] px-2.5 py-[11px] text-left"
+          onClick={() => navigate(ROUTES.PROFILE)}
+          className="mb-[30px] flex w-full cursor-pointer items-center gap-2.5 rounded-xl border border-[#edf1f1] px-2.5 py-[11px] text-left transition hover:bg-[#f3f8f8]"
         >
           <span className="grid size-[31px] shrink-0 place-items-center rounded-full bg-[#e3f0e8] text-sm font-bold text-[#547d69]">
             {initials(user.name)}

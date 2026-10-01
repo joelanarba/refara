@@ -33,7 +33,10 @@ export default function FacilityDashboard() {
         subtitle="Here's what's happening with your maternal referrals today."
         action={
           canCreate ? (
-            <Link to={ROUTES.REFERRAL_CREATE} className="primary-button">
+            <Link
+              to={ROUTES.REFERRAL_CREATE}
+              className="inline-flex items-center gap-2 rounded-xl bg-[#3e8995] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#327581] active:bg-[#2d6d78] focus:outline-none focus:ring-4 focus:ring-[#3e8995]/20"
+            >
               <PlusIcon />
               New referral
             </Link>
