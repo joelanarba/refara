@@ -14,6 +14,8 @@ const MOCK_STATS: Record<DashboardScope, DashboardStats> = {
     completed: 1,
     completedChangePct: 8.2,
     urgentCases: 3,
+    totalFacilities: 12,
+    totalUsers: 45,
   },
   facility: {
     totalReferrals: 3,

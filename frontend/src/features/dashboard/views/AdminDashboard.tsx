@@ -1,6 +1,6 @@
 import DashboardHeader from '../components/DashboardHeader';
 import WelcomeBanner from '../components/WelcomeBanner';
-import StatsRow from '../components/StatsRow';
+import AdminStatsRow from '../components/AdminStatsRow';
 import RecentReferralsPanel from '../components/RecentReferralsPanel';
 import { useDashboardData } from '@/hooks/useDashboardData';
 
@@ -18,7 +18,7 @@ export default function AdminDashboard() {
         title="Care network health is steady"
         text="All facilities are online and referrals are being acknowledged within target."
       />
-      <StatsRow stats={stats.data} loading={stats.loading} totalLabel="Total referrals" />
+      <AdminStatsRow stats={stats.data} loading={stats.loading} />
       <div className="content-grid">
         <RecentReferralsPanel
           title="Recent network referrals"

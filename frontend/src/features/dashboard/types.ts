@@ -7,6 +7,8 @@ export interface DashboardStats {
   completed: number;
   completedChangePct: number | null;
   urgentCases: number;
+  totalFacilities?: number;
+  totalUsers?: number;
 }
 
 /**

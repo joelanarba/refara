@@ -21,6 +21,8 @@ export default function ReferralCreateForm() {
 
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [ageInput, setAgeInput] = useState('');
+  const [ageError, setAgeError] = useState('');
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -28,6 +30,9 @@ export default function ReferralCreateForm() {
 
     if (!formData.patientName.trim()) {
       return setError('Patient name is required.');
+    }
+    if (ageError) {
+      return setError('Please resolve the age validation error before submitting.');
     }
     if (!formData.patientAge || formData.patientAge < 10) {
       return setError('Please provide a valid patient age.');
@@ -105,20 +110,40 @@ export default function ReferralCreateForm() {
             </label>
             <input
               id="patient-age"
-              type="number"
+              type="text"
               required
-              min="10"
-              max="60"
               placeholder="e.g. 28"
-              value={formData.patientAge || ''}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  patientAge: parseInt(e.target.value) || 0,
-                })
-              }
-              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-[#1b2a32] outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15"
+              value={ageInput}
+              onChange={(e) => {
+                const val = e.target.value;
+                setAgeInput(val);
+                
+                if (val === '') {
+                  setAgeError('');
+                  setFormData({ ...formData, patientAge: 0 });
+                  return;
+                }
+                
+                if (!/^\d+$/.test(val)) {
+                  setAgeError('Must be a number');
+                  return;
+                }
+                
+                const num = parseInt(val);
+                if (num < 10 || num > 60) {
+                  setAgeError('Must be 10-60');
+                } else {
+                  setAgeError('');
+                }
+                setFormData({ ...formData, patientAge: num });
+              }}
+              className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-[#1b2a32] outline-none transition focus:ring-4 ${
+                ageError 
+                  ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-500/15' 
+                  : 'border-slate-200 focus:border-[#86b3b5] focus:ring-[#86b3b5]/15'
+              }`}
             />
+            {ageError && <span className="mt-1.5 block text-xs font-medium text-rose-500">{ageError}</span>}
           </div>
 
           <div>

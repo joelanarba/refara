@@ -43,13 +43,22 @@ export const getDashboardStats = asyncHandler(async (req: Request, res: Response
     }),
   ]);
 
+  let totalFacilities, totalUsers;
+  if (scope === 'network') {
+    [totalFacilities, totalUsers] = await Promise.all([
+      prisma.facility.count(),
+      prisma.user.count()
+    ]);
+  }
+
   res.json({
     totalReferrals: total,
     totalReferralsChangePct: null, // MVP: No historical comparison yet
     pendingAction: pending,
     completed: completed,
     completedChangePct: null,
-    urgentCases: urgent
+    urgentCases: urgent,
+    ...(scope === 'network' && { totalFacilities, totalUsers })
   });
 });
 
