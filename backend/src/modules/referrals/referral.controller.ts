@@ -21,7 +21,7 @@ const ALLOWED_TRANSITIONS: Record<ReferralStatus, ReferralStatus[]> = {
 
 // Unique referral code generator
 const generateReferralCode = (): string => {
-  return `REF-${new Date().getFullYear()}-${crypto.randomBytes(4).toString('hex').toUpperCase()}`;
+  return `REF-${crypto.randomBytes(3).toString('hex').toUpperCase().substring(0, 5)}`;
 };
 
 export const createReferral = async (req: Request, res: Response) => {

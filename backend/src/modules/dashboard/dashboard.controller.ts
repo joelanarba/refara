@@ -90,11 +90,11 @@ export const getRecentReferrals = asyncHandler(async (req: Request, res: Respons
     }
   });
 
-  const formatted = referrals.map((r: any, i: number) => {
+  const formatted = referrals.map((r: any) => {
     const initials = r.patientName.split(' ').map((w: string) => w[0]).join('').substring(0, 2).toUpperCase();
     return {
       id: r.id,
-      code: `MR-${1000 + i}`, // Simple MVP code generation
+      code: r.referralCode,
       patientInitials: initials,
       patientName: r.patientName,
       patientAge: r.patientAge,

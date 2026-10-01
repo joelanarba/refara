@@ -64,7 +64,7 @@ export default function ReferralsTable({
       </div>
 
       <div className={`${GRID} py-[13px] text-xs font-bold tracking-[0.6px] text-[#a3b0b1]`}>
-        <span>REFERENCE</span>
+        <span>ID</span>
         <span>PATIENT</span>
         <span className="hidden md:block">FACILITIES</span>
         <span>URGENCY</span>
