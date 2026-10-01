@@ -127,16 +127,16 @@ export default function ReferralCreateForm() {
               value={ageInput}
               onChange={(e) => {
                 const val = e.target.value;
+                if (!/^\d*$/.test(val)) {
+                  setAgeError('Numbers only');
+                  return;
+                }
+                
                 setAgeInput(val);
                 
                 if (val === '') {
                   setAgeError('');
                   setFormData({ ...formData, patientAge: 0 });
-                  return;
-                }
-                
-                if (!/^\d+$/.test(val)) {
-                  setAgeError('Must be a number');
                   return;
                 }
                 
@@ -171,16 +171,16 @@ export default function ReferralCreateForm() {
               value={gestInput}
               onChange={(e) => {
                 const val = e.target.value;
+                if (!/^\d*$/.test(val)) {
+                  setGestError('Numbers only');
+                  return;
+                }
+                
                 setGestInput(val);
                 
                 if (val === '') {
                   setGestError('');
                   setFormData({ ...formData, gestationalWeeks: 0 });
-                  return;
-                }
-                
-                if (!/^\d+$/.test(val)) {
-                  setGestError('Must be a number');
                   return;
                 }
                 
@@ -325,3 +325,4 @@ function ChevronIcon() {
     </div>
   );
 }
+
