@@ -111,6 +111,15 @@ function toDetail(record: ReferralListItem): ReferralDetail {
   };
 }
 
+function initials(name: string) {
+  return name
+    .split(' ')
+    .map((p) => p[0])
+    .join('')
+    .slice(0, 2)
+    .toUpperCase();
+}
+
 export async function getReferrals(
   scope: ReferralScope,
   direction: ReferralDirection = 'all',
@@ -118,23 +127,72 @@ export async function getReferrals(
   if (USE_MOCK) {
     return scope === 'network' ? ALL_REFERRALS : filterByDirection(ALL_REFERRALS, direction);
   }
-  const params = scope === 'facility' ? `?direction=${direction}` : '';
-  return apiClient.get<ReferralListItem[]>(`/referrals${params}`);
+  
+  let raw: any[] = [];
+  if (scope === 'network') {
+    // Admin seeing all
+    raw = await apiClient.get<any[]>('/referrals/outgoing'); // Assuming outgoing for admins returns all
+  } else {
+    if (direction === 'sent') {
+      raw = await apiClient.get<any[]>('/referrals/outgoing');
+    } else if (direction === 'received') {
+      raw = await apiClient.get<any[]>('/referrals/incoming');
+    } else {
+      const [out, inc] = await Promise.all([
+        apiClient.get<any[]>('/referrals/outgoing'),
+        apiClient.get<any[]>('/referrals/incoming')
+      ]);
+      raw = [...out, ...inc];
+    }
+  }
+
+  // Deduplicate if we merged both (since backend returns identical IDs if somehow both)
+  const unique = Array.from(new Map(raw.map((r) => [r.id, r])).values());
+
+  return unique.map((r: any) => ({
+    id: r.id,
+    code: r.referralCode || r.code || 'N/A',
+    patientInitials: initials(r.patientName || 'Unknown'),
+    patientName: r.patientName,
+    patientAge: r.patientAge,
+    reason: r.reason,
+    referringFacilityName: r.referringFacility?.name || 'Unknown',
+    receivingFacilityName: r.receivingFacility?.name || 'Unknown',
+    urgency: r.urgency,
+    status: r.status,
+    createdAt: r.createdAt,
+    updatedAt: r.updatedAt,
+  }));
 }
 
 export async function createReferral(payload: CreateReferralPayload): Promise<ReferralListItem> {
-  return apiClient.post<ReferralListItem>('/referrals', payload);
+  const r: any = await apiClient.post('/referrals', payload);
+  return {
+    id: r.id,
+    code: r.referralCode || 'N/A',
+    patientInitials: initials(r.patientName),
+    patientName: r.patientName,
+    patientAge: r.patientAge,
+    reason: r.reason,
+    referringFacilityName: 'Your Facility', // Mocked on create
+    receivingFacilityName: 'Destination', // Mocked on create
+    urgency: r.urgency,
+    status: r.status,
+    createdAt: r.createdAt,
+    updatedAt: r.updatedAt,
+  };
 }
 
-// export async function getReferralById(id: string): Promise<ReferralDetail> {
-//   return apiClient.get<ReferralDetail>(`/referrals/${id}`);
-// }
 export async function getReferralById(id: string): Promise<ReferralDetail | null> {
   if (USE_MOCK) {
     const record = ALL_REFERRALS.find((r) => r.id === id);
     return record ? toDetail(record) : null;
   }
-  return apiClient.get<ReferralDetail>(`/referrals/${id}`);
+  const r: any = await apiClient.get(`/referrals/${id}`);
+  return {
+    ...r,
+    code: r.referralCode,
+  };
 }
 
 export async function updateReferralStatus(
