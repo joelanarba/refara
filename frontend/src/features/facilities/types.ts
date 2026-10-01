@@ -8,3 +8,9 @@ export interface FacilitySummary {
   isOnline: boolean;
   activeReferrals: number;
 }
+
+export interface CreateFacilityPayload {
+  name: string;
+  type: FacilityType;
+  location: string;
+}
