@@ -51,7 +51,37 @@ export function facilityTypeLabel(type: FacilitySummary['type']) {
   return TYPE_LABELS[type];
 }
 
+// Dropdown options for the Add Facility form — derived from TYPE_LABELS so
+// there's one source of truth for the label wording.
+export const FACILITY_TYPE_OPTIONS: { value: FacilitySummary['type']; label: string }[] =
+  Object.entries(TYPE_LABELS).map(([value, label]) => ({
+    value: value as FacilitySummary['type'],
+    label,
+  }));
+
 export async function getFacilities(): Promise<FacilitySummary[]> {
   if (USE_MOCK) return MOCK_FACILITIES;
   return apiClient.get<FacilitySummary[]>('/facilities');
+}
+
+export interface CreateFacilityPayload {
+  name: string;
+  type: FacilitySummary['type'];
+  location: string;
+}
+
+export async function createFacility(data: CreateFacilityPayload): Promise<FacilitySummary> {
+  if (USE_MOCK) {
+    const facility: FacilitySummary = {
+      id: `fac-${MOCK_FACILITIES.length + 1}`,
+      name: data.name,
+      type: data.type,
+      location: data.location,
+      isOnline: true,
+      activeReferrals: 0,
+    };
+    MOCK_FACILITIES.push(facility);
+    return facility;
+  }
+  return apiClient.post<FacilitySummary>('/facilities', data);
 }

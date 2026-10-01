@@ -27,7 +27,10 @@ export default function ReferralsListPage() {
         subtitle="Track, review, and coordinate every maternal referral."
         action={
           canCreate ? (
-            <Link to={ROUTES.REFERRAL_CREATE} className="primary-button">
+            <Link
+              to={ROUTES.REFERRAL_CREATE}
+              className="inline-flex items-center gap-2 rounded-xl bg-[#3e8995] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#327581] active:bg-[#2d6d78] focus:outline-none focus:ring-4 focus:ring-[#3e8995]/20"
+            >
               <PlusIcon />
               New referral
             </Link>
@@ -56,6 +59,7 @@ function PlusIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
+      aria-hidden="true"
     >
       <path d="M12 5v14M5 12h14" />
     </svg>

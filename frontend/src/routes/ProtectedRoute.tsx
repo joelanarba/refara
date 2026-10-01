@@ -13,9 +13,7 @@ export default function ProtectedRoute({ allowedRoles }: ProtectedRouteProps) {
 
   if (isLoading) {
     return (
-      <div style={{ display: 'grid', placeItems: 'center', minHeight: '100vh', color: '#87979a' }}>
-        Loading…
-      </div>
+      <div className="grid min-h-screen place-items-center text-sm text-[#87979a]">Loading…</div>
     );
   }
 

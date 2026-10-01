@@ -7,6 +7,7 @@ import ReferralsListPage from '../pages/ReferralsListPage';
 import FacilitiesPage from '../pages/FacilitiesPage';
 import UsersPage from '../pages/UsersPage';
 import NotFoundPage from '../pages/NotFoundPage';
+import ProfilePage from '@/components/common/ProfilePage';
 import ProtectedRoute from './ProtectedRoute';
 import AppLayout from '@/components/layout/AppLayout';
 
@@ -26,6 +27,7 @@ export default function AppRoutes() {
           <Route path={ROUTES.DASHBOARD} element={<DashboardPage />} />
           <Route path={ROUTES.REFERRALS} element={<ReferralsListPage />} />
           <Route path={ROUTES.REFERRAL_DETAIL} element={<ReferralDetailPage />} />
+          <Route path={ROUTES.PROFILE} element={<ProfilePage />} />
 
           {/* Protected — referring workers only */}
           <Route element={<ProtectedRoute allowedRoles={['WORKER']} />}>

@@ -11,7 +11,7 @@ export default function StatsRow({ stats, loading, totalLabel }: StatsRowProps) 
   const v = (n?: number) => (loading ? '–' : (n ?? 0));
 
   return (
-    <div className="metric-grid">
+    <div className="mb-6 grid grid-cols-2 gap-2.5 min-[431px]:gap-4 md:grid-cols-4">
       <StatsCard
         icon={<ClipboardIcon />}
         iconVariant="blue"

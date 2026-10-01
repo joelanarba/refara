@@ -13,7 +13,7 @@ const TABS: { key: ReferralDirection; label: string }[] = [
 
 export default function ReferralTabs({ active, onChange }: ReferralTabsProps) {
   return (
-    <div style={{ display: 'flex', gap: 6, marginBottom: 20 }}>
+    <div className="mb-5 flex gap-1.5">
       {TABS.map((tab) => {
         const isActive = tab.key === active;
         return (
@@ -21,16 +21,11 @@ export default function ReferralTabs({ active, onChange }: ReferralTabsProps) {
             key={tab.key}
             type="button"
             onClick={() => onChange(tab.key)}
-            style={{
-              border: 0,
-              borderRadius: 8,
-              padding: '9px 16px',
-              fontSize: 12,
-              fontWeight: 700,
-              cursor: 'pointer',
-              color: isActive ? '#317c89' : '#839396',
-              background: isActive ? '#eaf5f5' : 'transparent',
-            }}
+            className={`rounded-lg px-4 py-[9px] text-xs font-bold transition ${
+              isActive
+                ? 'bg-[#eaf5f5] text-[#317c89]'
+                : 'bg-transparent text-[#839396] hover:text-[#317c89]'
+            }`}
           >
             {tab.label}
           </button>

@@ -52,11 +52,11 @@ export default function FacilityDashboard() {
           referrals={referrals.data ?? []}
           loading={referrals.loading}
         />
-        <ReferralActivityChart
+        {/* <ReferralActivityChart
           points={activity.data?.points ?? []}
           changePct={activity.data?.changePct ?? null}
           loading={activity.loading}
-        />
+        /> */}
       </div>
     </>
   );

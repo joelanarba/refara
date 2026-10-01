@@ -87,10 +87,13 @@ const ALL_REFERRALS: ReferralListItem[] = [
 const MOCK_MY_FACILITY = 'Adabraka Community Clinic';
 
 function filterByDirection(items: ReferralListItem[], direction: ReferralDirection) {
-  if (direction === 'sent') return items.filter((r) => r.referringFacilityName === MOCK_MY_FACILITY);
-  if (direction === 'received') return items.filter((r) => r.receivingFacilityName === MOCK_MY_FACILITY);
+  if (direction === 'sent')
+    return items.filter((r) => r.referringFacilityName === MOCK_MY_FACILITY);
+  if (direction === 'received')
+    return items.filter((r) => r.receivingFacilityName === MOCK_MY_FACILITY);
   return items.filter(
-    (r) => r.referringFacilityName === MOCK_MY_FACILITY || r.receivingFacilityName === MOCK_MY_FACILITY,
+    (r) =>
+      r.referringFacilityName === MOCK_MY_FACILITY || r.receivingFacilityName === MOCK_MY_FACILITY,
   );
 }
 
@@ -109,7 +112,14 @@ export async function createReferral(payload: CreateReferralPayload): Promise<Re
   return apiClient.post<ReferralListItem>('/referrals', payload);
 }
 
-export async function getReferralById(id: string): Promise<ReferralDetail> {
+// export async function getReferralById(id: string): Promise<ReferralDetail> {
+//   return apiClient.get<ReferralDetail>(`/referrals/${id}`);
+// }
+export async function getReferralById(id: string): Promise<ReferralDetail | null> {
+  if (USE_MOCK) {
+    const record = ALL_REFERRALS.find((r) => r.id === id);
+    return record ? toDetail(record) : null;
+  }
   return apiClient.get<ReferralDetail>(`/referrals/${id}`);
 }
 
