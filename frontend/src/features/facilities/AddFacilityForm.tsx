@@ -1,7 +1,6 @@
 import { FormEvent, useState } from 'react';
 import { FacilityType } from '@/types';
-import { createFacility } from './facilityService';
-import { FACILITY_TYPE_OPTIONS } from './facilityService';
+import { createFacility, FACILITY_TYPE_OPTIONS } from './facilityService';
 
 interface AddFacilityFormProps {
   onCancel: () => void;
@@ -37,45 +36,37 @@ export default function AddFacilityForm({ onCancel, onSuccess }: AddFacilityForm
   return (
     <form
       onSubmit={handleSubmit}
-      className="w-full max-w-[420px] rounded-2xl bg-white p-7 shadow-[0_24px_60px_rgba(20,40,44,.22)]"
+      className="w-full max-w-[420px] rounded-2xl border border-slate-100 bg-white p-6 shadow-xl sm:p-7 text-slate-800"
     >
-      {/* Header */}
-      <div className="mb-6 flex items-start gap-3.5">
-        <span className="grid h-11 w-11 shrink-0 place-items-center rounded-xl bg-[#e7f3f3] text-[#498d96]">
+      <div className="mb-6 flex items-start gap-4 border-b border-slate-100 pb-5">
+        <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 text-[#498d96]">
           <BuildingIcon />
-        </span>
-
-        <div className="min-w-0 flex-1">
-          <h2 className="m-0 font-display text-[17px] font-bold text-[#253b42]">Add facility</h2>
-          <p className="mt-1 text-[12.5px] leading-snug text-[#87979a]">
+        </div>
+        <div className="flex-1">
+          <h2 className="text-lg font-semibold tracking-tight text-[#253b42]">Add facility</h2>
+          <p className="mt-1 text-sm text-[#87979a] leading-relaxed">
             Connect a new care facility to the network.
           </p>
         </div>
-
         <button
           type="button"
           onClick={onCancel}
-          aria-label="Close"
-          className="-mt-1 -mr-1 grid h-8 w-8 place-items-center rounded-lg text-[#9aabad] transition hover:bg-[#f3f8f8] hover:text-[#3f8995] focus:outline-none focus:ring-2 focus:ring-[#86b3b5]/30"
+          className="-mr-1 -mt-1 rounded-full p-2 text-slate-400 transition hover:bg-slate-100 hover:text-slate-600"
+          aria-label="Close modal"
         >
           <CloseIcon />
         </button>
       </div>
 
-      {/* Error */}
       {error && (
-        <p role="alert" className="mb-4 text-[13px] font-medium text-[#bd6255]">
+        <div className="mb-5 rounded-xl border border-rose-100 bg-rose-50 px-4 py-3 text-sm font-medium text-rose-600">
           {error}
-        </p>
+        </div>
       )}
 
-      {/* Fields */}
       <div className="space-y-4">
         <div>
-          <label
-            htmlFor="facilityName"
-            className="mb-1.5 block text-[12px] font-semibold text-[#4d6469]"
-          >
+          <label htmlFor="facilityName" className="mb-1.5 block text-[13px] font-semibold text-[#334752]">
             Facility name
           </label>
           <input
@@ -84,41 +75,36 @@ export default function AddFacilityForm({ onCancel, onSuccess }: AddFacilityForm
             placeholder="e.g. Tema General Hospital"
             value={name}
             onChange={(e) => setName(e.target.value)}
-            className="w-full rounded-lg border border-[#e0e9e9] bg-white px-3 py-2.5 text-sm text-[#2a4148] outline-none transition placeholder:text-[#a6b2b3] focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-[#1b2a32] placeholder-[#8fa0aa] outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15"
           />
         </div>
 
         <div>
-          <label
-            htmlFor="facilityType"
-            className="mb-1.5 block text-[12px] font-semibold text-[#4d6469]"
-          >
+          <label htmlFor="facilityType" className="mb-1.5 block text-[13px] font-semibold text-[#334752]">
             Facility type
           </label>
-          <select
-            id="facilityType"
-            value={type}
-            onChange={(e) => setType(e.target.value as FacilityType)}
-            className={`w-full cursor-pointer rounded-lg border border-[#e0e9e9] bg-white px-3 py-2.5 text-sm outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15 ${
-              type ? 'text-[#2a4148]' : 'text-[#a6b2b3]'
-            }`}
-          >
-            <option value="" disabled>
-              Select a type
-            </option>
-            {FACILITY_TYPE_OPTIONS.map((opt) => (
-              <option key={opt.value} value={opt.value}>
-                {opt.label}
-              </option>
-            ))}
-          </select>
+          <div className="relative">
+            <select
+              id="facilityType"
+              value={type}
+              onChange={(e) => setType(e.target.value as FacilityType)}
+              className={`w-full cursor-pointer appearance-none rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 pr-10 text-sm outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15 ${!type ? 'text-[#8fa0aa]' : 'text-[#1b2a32]'}`}
+            >
+              <option value="" disabled>Select a type</option>
+              {FACILITY_TYPE_OPTIONS.map((opt) => (
+                <option key={opt.value} value={opt.value} className="text-[#1b2a32]">
+                  {opt.label}
+                </option>
+              ))}
+            </select>
+            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3.5 text-[#334752]">
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>
+            </div>
+          </div>
         </div>
 
-        <div className="!mb-2">
-          <label
-            htmlFor="facilityLocation"
-            className="mb-1.5 block text-[12px] font-semibold text-[#4d6469]"
-          >
+        <div>
+          <label htmlFor="facilityLocation" className="mb-1.5 block text-[13px] font-semibold text-[#334752]">
             Location
           </label>
           <input
@@ -127,29 +113,27 @@ export default function AddFacilityForm({ onCancel, onSuccess }: AddFacilityForm
             placeholder="e.g. Tema"
             value={location}
             onChange={(e) => setLocation(e.target.value)}
-            className="w-full rounded-lg border border-[#e0e9e9] bg-white px-3 py-2.5 text-sm text-[#2a4148] outline-none transition placeholder:text-[#a6b2b3] focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15"
+            className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-[#1b2a32] placeholder-[#8fa0aa] outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15"
           />
         </div>
       </div>
 
-      {/* Footer */}
-      <div className="mt-5 flex justify-end gap-2.5 border-t border-[#edf2f2] pt-5">
+      <div className="mt-7 flex items-center justify-end gap-3 border-t border-slate-100 pt-5">
         <button
           type="button"
           onClick={onCancel}
           disabled={isSubmitting}
-          className="rounded-lg border border-[#e0e9e9] bg-white px-[18px] py-[11px] text-[13px] font-semibold text-[#718285] transition hover:border-[#a7ccce] hover:text-[#3e8995] focus:outline-none focus:ring-2 focus:ring-[#86b3b5]/30 disabled:cursor-not-allowed disabled:opacity-50"
+          className="cursor-pointer rounded-xl border border-slate-200 bg-white px-5 py-2.5 text-sm font-medium text-[#334752] transition hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed"
         >
           Cancel
         </button>
-
         <button
           type="submit"
           disabled={isSubmitting}
-          className="inline-flex items-center gap-2 rounded-lg bg-[#3e8995] px-[18px] py-[11px] text-[13px] font-bold text-white shadow-sm transition hover:bg-[#327581] active:bg-[#2d6d78] focus:outline-none focus:ring-4 focus:ring-[#3e8995]/20 disabled:cursor-not-allowed disabled:opacity-50"
+          className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-[#86b3b5] px-5 py-2.5 text-sm font-medium text-white shadow-xs transition hover:bg-[#729fa1] active:bg-[#638e90] disabled:cursor-not-allowed disabled:opacity-50 gap-2 min-w-[130px]"
         >
           <CheckIcon />
-          {isSubmitting ? 'Adding…' : 'Add facility'}
+          {isSubmitting ? 'Adding...' : 'Add facility'}
         </button>
       </div>
     </form>
@@ -158,15 +142,7 @@ export default function AddFacilityForm({ onCancel, onSuccess }: AddFacilityForm
 
 function BuildingIcon() {
   return (
-    <svg
-      width="18"
-      height="18"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round">
       <path d="M3 21h18M6 21V7l6-4 6 4v14M9 9h1M9 13h1M14 9h1M14 13h1M10 21v-4h4v4" />
     </svg>
   );
@@ -174,15 +150,7 @@ function BuildingIcon() {
 
 function CloseIcon() {
   return (
-    <svg
-      width="16"
-      height="16"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2"
-      aria-hidden="true"
-    >
+    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
       <path d="M18 6L6 18M6 6l12 12" />
     </svg>
   );
@@ -190,15 +158,7 @@ function CloseIcon() {
 
 function CheckIcon() {
   return (
-    <svg
-      width="13"
-      height="13"
-      viewBox="0 0 24 24"
-      fill="none"
-      stroke="currentColor"
-      strokeWidth="2.5"
-      aria-hidden="true"
-    >
+    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3" strokeLinecap="round" strokeLinejoin="round">
       <path d="M5 13l4 4L19 7" />
     </svg>
   );

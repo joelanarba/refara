@@ -1,9 +1,9 @@
-import { useState } from 'react';
 import { useFacilities } from '@/hooks/useFacilities';
 import DashboardHeader from '../features/dashboard/components/DashboardHeader';
 import FacilityCard from '@/features/facilities/FacilityCard';
-import AddFacilityForm from '@/features/facilities/AddFacilityForm';
-import Modal from '@/components/ui/Modal';
+import { useState } from 'react';
+import AddFacilityForm from '../features/facilities/AddFacilityForm';
+import Modal from '../components/ui/Modal';
 
 export default function FacilitiesPage() {
   const { data: facilities, loading, refetch } = useFacilities();
@@ -16,21 +16,17 @@ export default function FacilitiesPage() {
         title="Facilities"
         subtitle="Manage connected care facilities across the network."
         action={
-          <button
-            type="button"
-            onClick={() => setIsAddModalOpen(true)}
-            className="inline-flex items-center gap-2 rounded-xl bg-[#3e8995] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#327581] active:bg-[#2d6d78] focus:outline-none focus:ring-4 focus:ring-[#3e8995]/20"
-          >
+          <button type="button" className="primary-button" onClick={() => setIsAddModalOpen(true)}>
             <PlusIcon />
             Add facility
           </button>
         }
       />
 
-      {loading && <p className="text-xs text-[#9aa8aa]">Loading…</p>}
+      {loading && <p style={{ color: '#9aa8aa', fontSize: 12 }}>Loading...</p>}
 
       {!loading && (
-        <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        <div className="facility-grid">
           {facilities?.map((f) => (
             <FacilityCard key={f.id} facility={f} />
           ))}
@@ -61,7 +57,6 @@ function PlusIcon() {
       fill="none"
       stroke="currentColor"
       strokeWidth="2.5"
-      aria-hidden="true"
     >
       <path d="M12 5v14M5 12h14" />
     </svg>
