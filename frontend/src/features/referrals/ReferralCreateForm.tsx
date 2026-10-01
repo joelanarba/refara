@@ -23,6 +23,17 @@ export default function ReferralCreateForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [ageInput, setAgeInput] = useState('');
   const [ageError, setAgeError] = useState('');
+  const [gestInput, setGestInput] = useState('');
+  const [gestError, setGestError] = useState('');
+
+  const isFormValid =
+    formData.patientName.trim() !== '' &&
+    formData.patientAge >= 10 &&
+    formData.patientAge <= 60 &&
+    !ageError &&
+    !gestError &&
+    formData.reason.trim() !== '' &&
+    formData.receivingFacilityId !== '';
 
   const handleSubmit = async (event: FormEvent) => {
     event.preventDefault();
@@ -31,8 +42,8 @@ export default function ReferralCreateForm() {
     if (!formData.patientName.trim()) {
       return setError('Patient name is required.');
     }
-    if (ageError) {
-      return setError('Please resolve the age validation error before submitting.');
+    if (ageError || gestError) {
+      return setError('Please resolve the validation errors before submitting.');
     }
     if (!formData.patientAge || formData.patientAge < 10) {
       return setError('Please provide a valid patient age.');
@@ -155,19 +166,39 @@ export default function ReferralCreateForm() {
             </label>
             <input
               id="gestational-weeks"
-              type="number"
-              min="0"
-              max="45"
+              type="text"
               placeholder="e.g. 32"
-              value={formData.gestationalWeeks || ''}
-              onChange={(e) =>
-                setFormData({
-                  ...formData,
-                  gestationalWeeks: parseInt(e.target.value) || 0,
-                })
-              }
-              className="w-full rounded-xl border border-slate-200 bg-white px-3.5 py-2.5 text-sm text-[#1b2a32] outline-none transition focus:border-[#86b3b5] focus:ring-4 focus:ring-[#86b3b5]/15"
+              value={gestInput}
+              onChange={(e) => {
+                const val = e.target.value;
+                setGestInput(val);
+                
+                if (val === '') {
+                  setGestError('');
+                  setFormData({ ...formData, gestationalWeeks: 0 });
+                  return;
+                }
+                
+                if (!/^\d+$/.test(val)) {
+                  setGestError('Must be a number');
+                  return;
+                }
+                
+                const num = parseInt(val);
+                if (num < 1 || num > 45) {
+                  setGestError('Must be 1-45');
+                } else {
+                  setGestError('');
+                }
+                setFormData({ ...formData, gestationalWeeks: num });
+              }}
+              className={`w-full rounded-xl border bg-white px-3.5 py-2.5 text-sm text-[#1b2a32] outline-none transition focus:ring-4 ${
+                gestError 
+                  ? 'border-rose-300 focus:border-rose-500 focus:ring-rose-500/15' 
+                  : 'border-slate-200 focus:border-[#86b3b5] focus:ring-[#86b3b5]/15'
+              }`}
             />
+            {gestError && <span className="mt-1.5 block text-xs font-medium text-rose-500">{gestError}</span>}
           </div>
         </div>
 
@@ -261,8 +292,12 @@ export default function ReferralCreateForm() {
         </button>
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="inline-flex min-w-[140px] items-center justify-center rounded-xl bg-[#3e8995] px-5 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-[#327581] active:bg-[#2d6d78] focus:outline-none focus:ring-4 focus:ring-[#3e8995]/20 disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isSubmitting || !isFormValid}
+          className={`inline-flex min-w-[140px] items-center justify-center rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-sm transition focus:outline-none focus:ring-4 focus:ring-[#3e8995]/20 disabled:cursor-not-allowed ${
+            isFormValid
+              ? 'bg-[#3e8995] hover:bg-[#327581] active:bg-[#2d6d78] opacity-100'
+              : 'bg-[#9aa8aa] opacity-70'
+          }`}
         >
           {isSubmitting ? 'Submitting...' : 'Submit Referral'}
         </button>

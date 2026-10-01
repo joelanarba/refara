@@ -255,8 +255,12 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
 
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="inline-flex cursor-pointer items-center gap-2 rounded-xl bg-[#86b3b5] px-5 py-2.5 text-sm font-medium text-white shadow-xs transition hover:bg-[#729fa1] active:bg-[#638e90] disabled:cursor-not-allowed disabled:opacity-50"
+          disabled={isSubmitting || !name.trim() || !email.trim() || !role || !facilityId}
+          className={`inline-flex items-center gap-2 rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-xs transition focus:outline-none disabled:cursor-not-allowed ${
+            name.trim() && email.trim() && role && facilityId
+              ? 'bg-[#3e8995] hover:bg-[#327581] active:bg-[#2d6d78] opacity-100'
+              : 'bg-[#9aa8aa] opacity-70'
+          }`}
         >
           <Mail className="h-4 w-4 stroke-[2]" />
           <span>{isSubmitting ? 'Sending...' : 'Send invitation'}</span>

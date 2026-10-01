@@ -129,8 +129,12 @@ export default function AddFacilityForm({ onCancel, onSuccess }: AddFacilityForm
         </button>
         <button
           type="submit"
-          disabled={isSubmitting}
-          className="inline-flex cursor-pointer items-center justify-center rounded-xl bg-[#86b3b5] px-5 py-2.5 text-sm font-medium text-white shadow-xs transition hover:bg-[#729fa1] active:bg-[#638e90] disabled:cursor-not-allowed disabled:opacity-50 gap-2 min-w-[130px]"
+          disabled={isSubmitting || !name.trim() || !type || !location.trim()}
+          className={`inline-flex items-center justify-center rounded-xl px-5 py-2.5 text-sm font-bold text-white shadow-xs transition focus:outline-none gap-2 min-w-[130px] disabled:cursor-not-allowed ${
+            name.trim() && type && location.trim()
+              ? 'bg-[#3e8995] hover:bg-[#327581] active:bg-[#2d6d78] opacity-100'
+              : 'bg-[#9aa8aa] opacity-70'
+          }`}
         >
           <CheckIcon />
           {isSubmitting ? 'Adding...' : 'Add facility'}
