@@ -1,4 +1,4 @@
-name: Deploy to AWS
+﻿name: Deploy to AWS
 
 on:
   push:
@@ -23,6 +23,7 @@ jobs:
         env:
           VITE_API_URL: ${{ secrets.VITE_API_URL }}
           VITE_MOCK_AUTH: false
+          VITE_DEMO_PASSWORD: ${{ secrets.VITE_DEMO_PASSWORD }}
         run: npm run build
       - name: Configure AWS Credentials
         uses: aws-actions/configure-aws-credentials@v4
@@ -62,3 +63,4 @@ jobs:
           region: us-east-1
           use_existing_version_if_available: true
           deployment_package: backend-bundle.zip
+
