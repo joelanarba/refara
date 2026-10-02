@@ -41,7 +41,7 @@ export default function LoginPage() {
     setShowDemoMenu(false);
     setLoading(true);
     try {
-      await login(demoEmail, 'password123');
+      await login(demoEmail, import.meta.env.VITE_DEMO_PASSWORD || '');
       navigate('/dashboard');
     } catch (_err) {
       setError('Demo login failed.');
@@ -324,6 +324,7 @@ function ShieldIcon() {
     </svg>
   );
 }
+
 
 
 
