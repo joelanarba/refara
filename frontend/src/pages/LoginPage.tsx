@@ -41,7 +41,7 @@ export default function LoginPage() {
     setShowDemoMenu(false);
     setLoading(true);
     try {
-      await login(demoEmail, 'Refara2026!');
+      await login(demoEmail, 'password123');
       navigate('/dashboard');
     } catch (_err) {
       setError('Demo login failed.');
@@ -324,5 +324,6 @@ function ShieldIcon() {
     </svg>
   );
 }
+
 
 
