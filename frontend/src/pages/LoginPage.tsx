@@ -1,14 +1,11 @@
-import { useAuth } from '@/features/auth/useAuth';
+﻿import { useAuth } from '@/features/auth/useAuth';
 import { useState, FormEvent } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-/*
 const DEMO_ACCOUNTS = [
-  { label: 'Referring Worker', email: 'referrer@demo.maternalink.org', role: 'WORKER' },
-  { label: 'Receiving Worker', email: 'receiver@demo.maternalink.org', role: 'WORKER' },
-  { label: 'Administrator', email: 'admin@demo.maternalink.org', role: 'ADMIN' },
+  { label: 'Healthcare Worker', email: 'grace@refara.com', role: 'WORKER' },
+  { label: 'Administrator', email: 'admin@refara.com', role: 'ADMIN' },
 ];
-*/
 
 const eyebrow = 'text-sm font-bold leading-tight tracking-[1.5px]';
 const inputCls =
@@ -22,7 +19,7 @@ export default function LoginPage() {
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  // const [showDemoMenu, setShowDemoMenu] = useState(false);
+  const [showDemoMenu, setShowDemoMenu] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
 
@@ -40,12 +37,11 @@ export default function LoginPage() {
     }
   };
 
-  /*
   const handleDemoSelect = async (demoEmail: string) => {
     setShowDemoMenu(false);
     setLoading(true);
     try {
-      await login(demoEmail, 'demo');
+      await login(demoEmail, 'Refara2026!');
       navigate('/dashboard');
     } catch (_err) {
       setError('Demo login failed.');
@@ -53,7 +49,6 @@ export default function LoginPage() {
       setLoading(false);
     }
   };
-  */
 
   return (
     <div className="min-h-screen bg-white md:grid md:grid-cols-[46%_54%] min-[1100px]:grid-cols-[52%_48%]">
@@ -279,7 +274,6 @@ function ArrowIcon() {
     </svg>
   );
 }
-/*
 function ChevronIcon() {
   return (
     <svg
@@ -315,7 +309,6 @@ function DemoIconBox() {
     </span>
   );
 }
-*/
 function ShieldIcon() {
   return (
     <svg
@@ -331,3 +324,4 @@ function ShieldIcon() {
     </svg>
   );
 }
+
