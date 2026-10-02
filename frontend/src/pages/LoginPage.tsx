@@ -172,7 +172,7 @@ export default function LoginPage() {
             </button>
           </form>
 
-          {/* Demo account section — temporarily disabled
+          {/* Demo account section */}
           <div className="mt-7 mb-4 flex items-center gap-[9px] text-sm text-[#a6b2b3] before:h-px before:flex-1 before:bg-[#edf1f1] before:content-[''] after:h-px after:flex-1 after:bg-[#edf1f1] after:content-['']">
             or continue with a demo account
           </div>
@@ -214,7 +214,7 @@ export default function LoginPage() {
               </div>
             )}
           </div>
-          */}
+
 
           <div className="mt-[22px] flex items-center justify-center gap-1.5 text-xs text-[#9eacad]">
             <span className="text-[#63a283]">
@@ -324,4 +324,5 @@ function ShieldIcon() {
     </svg>
   );
 }
+
 
