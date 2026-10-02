@@ -35,3 +35,28 @@ export const createFacility = asyncHandler(async (req: Request, res: Response) =
   });
   res.status(201).json({ data: facility });
 });
+
+export const getFacilityById = asyncHandler(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const facility = await prisma.facility.findUnique({
+    where: { id },
+  });
+  if (!facility) throw new Error('Facility not found');
+  res.status(200).json({ data: facility });
+});
+
+export const updateFacility = asyncHandler(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  const { name, type, location } = req.body;
+  const facility = await prisma.facility.update({
+    where: { id },
+    data: { name, type, location },
+  });
+  res.status(200).json({ data: facility });
+});
+
+export const deleteFacility = asyncHandler(async (req: Request, res: Response) => {
+  const id = req.params.id as string;
+  await prisma.facility.delete({ where: { id } });
+  res.status(200).json({ data: { success: true } });
+});

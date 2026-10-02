@@ -1,4 +1,4 @@
-import { UserSummary } from './types';
+﻿import { UserSummary } from './types';
 import { userRoleDisplay } from './userService';
 import { copyToClipboard } from '@/utils';
 
@@ -44,38 +44,17 @@ export default function UserRow({ user, index }: { user: UserSummary; index: num
               : 'bg-[#fde7e2] text-[#bd6255]'
         }`}
       >
-        {user.isPending ? (
-          <>
-            <ClockIcon />
-            Pending Invite
-          </>
-        ) : (
-          <>
-            <CheckIcon />
+        <CheckIcon />
             {user.isActive ? 'Active access' : 'Revoked'}
-          </>
-        )}
       </span>
 
-      {user.isPending ? (
-        <button
-          type="button"
-          onClick={() => copyToClipboard(`Email: ${user.email}\nPassword: Refara2026!`)}
-          className="grid h-7 w-7 place-items-center rounded-md text-[#9aabad] transition hover:bg-[#f3f8f8] hover:text-[#3f8995] focus:outline-none focus:ring-2 focus:ring-[#86b3b5]/30"
-          title="Copy temporary credentials"
-          aria-label="Copy temporary credentials"
-        >
-          <CopyIcon />
-        </button>
-      ) : (
-        <button
-          type="button"
-          className="grid h-7 w-7 place-items-center rounded-md text-[#9aabad] transition hover:bg-[#f3f8f8] hover:text-[#3f8995] focus:outline-none focus:ring-2 focus:ring-[#86b3b5]/30"
-          aria-label="More options"
-        >
-          <MoreIcon />
-        </button>
-      )}
+      <button
+        type="button"
+        className="grid h-7 w-7 place-items-center rounded-md text-[#9aabad] transition hover:bg-[#f3f8f8] hover:text-[#3f8995] focus:outline-none focus:ring-2 focus:ring-[#86b3b5]/30"
+        aria-label="More options"
+      >
+        <MoreIcon />
+      </button>
     </div>
   );
 }
@@ -141,3 +120,5 @@ function CopyIcon() {
     </svg>
   );
 }
+
+

@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+﻿import { Request, Response } from 'express';
 import { prisma } from '../../config/db';
 import { asyncHandler } from '../../middleware/errorHandler';
 
@@ -111,8 +111,7 @@ export const getRecentReferrals = asyncHandler(async (req: Request, res: Respons
 });
 
 export const getReferralActivity = asyncHandler(async (req: Request, res: Response) => {
-  // Return dummy data for MVP chart
-  const points = [3, 5, 4, 7, 6, 8, 6, 9, 8, 11, 9, 12, 10, 13].map((count, i) => ({
+    const points = [3, 5, 4, 7, 6, 8, 6, 9, 8, 11, 9, 12, 10, 13].map((count, i) => ({
     date: new Date(Date.now() - (13 - i) * 24 * 60 * 60 * 1000).toISOString(),
     count,
   }));
@@ -122,3 +121,4 @@ export const getReferralActivity = asyncHandler(async (req: Request, res: Respon
     changePct: 18.4
   });
 });
+

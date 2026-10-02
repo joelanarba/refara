@@ -21,12 +21,13 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
   const [error, setError] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [showSuccess, setShowSuccess] = useState(false);
+  const [tempPassword, setTempPassword] = useState('Refara2026!');
   
   const [facilities, setFacilities] = useState<FacilitySummary[]>([]);
   const [isLoadingFacilities, setIsLoadingFacilities] = useState(true);
 
   const handleCopy = () => {
-    copyToClipboard(`Email: ${email}\nPassword: Refara2026!`);
+    copyToClipboard(`Email: ${email}\nPassword: ${tempPassword}`);
   };
 
   useEffect(() => {
@@ -69,7 +70,10 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
     setIsSubmitting(true);
 
     try {
-      await createUser({ name, email, role, facilityId });
+      const res = await createUser({ name, email, role, facilityId });
+      if (res?.data?.tempPassword) {
+        setTempPassword(res.data.tempPassword);
+      }
       setShowSuccess(true);
     } catch (err: any) {
       setError(err.message || 'Failed to create user. Please try again.');
@@ -95,7 +99,7 @@ export default function InviteUserForm({ onCancel, onSuccess }: InviteUserFormPr
           </div>
           <div>
             <span className="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Temporary Password</span>
-            <span className="text-sm font-mono text-slate-800 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">Refara2026!</span>
+            <span className="text-sm font-mono text-slate-800 font-medium bg-white px-2 py-0.5 rounded border border-slate-200">{tempPassword}</span>
           </div>
           <button 
             type="button"

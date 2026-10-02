@@ -1,3 +1,4 @@
+﻿import { asyncHandler } from '../../middleware/errorHandler';
 import { Request, Response } from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -103,3 +104,14 @@ export const loginUser = async (req: Request, res: Response) => {
       .json({ error: { message: 'Internal server error during login', status: 500 } });
   }
 };
+
+export const getMe = asyncHandler(async (req: Request, res: Response) => {
+  const user = await prisma.user.findUnique({
+    where: { id: req.user!.userId },
+    include: { facility: true }
+  });
+  if (!user) throw new Error('User not found');
+  const { passwordHash: _, ...safeUser } = user;
+  res.status(200).json({ data: safeUser });
+});
+

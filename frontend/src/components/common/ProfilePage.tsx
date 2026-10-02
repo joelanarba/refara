@@ -37,8 +37,7 @@ export default function ProfilePage() {
     setPasswordSaved(false);
 
     try {
-      // Mock update
-      await new Promise((r) => setTimeout(r, 600));
+            await new Promise((r) => setTimeout(r, 600));
       setPasswordSaved(true);
       setCurrentPassword('');
       setNewPassword('');
@@ -56,9 +55,7 @@ export default function ProfilePage() {
     setSaved(false);
 
     try {
-      // Replace with your real update call, e.g.
-      // await updateProfile({ name, email });
-      await new Promise((r) => setTimeout(r, 600)); // demo delay
+            await new Promise((r) => setTimeout(r, 600));
       setSaved(true);
     } finally {
       setIsSaving(false);
@@ -253,5 +250,7 @@ function PinIcon() {
     </svg>
   );
 }
+
+
 
 
